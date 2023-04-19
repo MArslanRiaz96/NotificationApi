@@ -1,0 +1,14 @@
+D:\VS Projects\NotificationApi\Customer.Data\bin\Debug\net7.0\Customer.Data.deps.json
+D:\VS Projects\NotificationApi\Customer.Data\bin\Debug\net7.0\Customer.Data.runtimeconfig.json
+D:\VS Projects\NotificationApi\Customer.Data\bin\Debug\net7.0\Customer.Data.dll
+D:\VS Projects\NotificationApi\Customer.Data\bin\Debug\net7.0\Customer.Data.pdb
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.csproj.AssemblyReference.cache
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.AssemblyInfoInputs.cache
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.AssemblyInfo.cs
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.csproj.CoreCompileInputs.cache
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.dll
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\refint\Customer.Data.dll
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.pdb
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.genruntimeconfig.cache
+D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\ref\Customer.Data.dll

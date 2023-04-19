@@ -1,0 +1,12 @@
+D:\VS Projects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Model.deps.json
+D:\VS Projects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Model.dll
+D:\VS Projects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Model.pdb
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.csproj.AssemblyReference.cache
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.AssemblyInfoInputs.cache
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.AssemblyInfo.cs
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.csproj.CoreCompileInputs.cache
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.dll
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\refint\Customer.Model.dll
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.pdb
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\ref\Customer.Model.dll
