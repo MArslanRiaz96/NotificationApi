@@ -10,3 +10,6 @@ D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.dl
 D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\refint\Customer.Model.dll
 D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.pdb
 D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\ref\Customer.Model.dll
+D:\VS Projects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Data.dll
+D:\VS Projects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Data.pdb
+D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.csproj.CopyComplete

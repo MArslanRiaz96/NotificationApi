@@ -3,7 +3,6 @@ D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\NotificationApi.
 D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\NotificationApi.AssemblyInfoInputs.cache
 D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\NotificationApi.AssemblyInfo.cs
 D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\NotificationApi.csproj.CoreCompileInputs.cache
-D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\NotificationApi.MvcApplicationPartsAssemblyInfo.cs
 D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\NotificationApi.MvcApplicationPartsAssemblyInfo.cache
 D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\appsettings.Development.json
 D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\appsettings.json
@@ -60,9 +59,6 @@ D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win-arm
 D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
-D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
@@ -84,3 +80,13 @@ D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\refint\Notificat
 D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\NotificationApi.pdb
 D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\NotificationApi.genruntimeconfig.cache
 D:\VS Projects\NotificationApi\NotificationApi\obj\Debug\net7.0\ref\NotificationApi.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\EPPlus.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\EPPlus.Interfaces.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\EPPlus.System.Drawing.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\System.Net.Http.Formatting.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\Microsoft.IO.RecyclableMemoryStream.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\Customer.Manager.dll
+D:\VS Projects\NotificationApi\NotificationApi\bin\Debug\net7.0\Customer.Manager.pdb

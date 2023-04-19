@@ -17,4 +17,8 @@
     <Folder Include="Validators\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Customer.Data\Customer.Data.csproj" />
+  </ItemGroup>
+
 </Project>

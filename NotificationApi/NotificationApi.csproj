@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Customer.Data\Customer.Data.csproj" />
+    <ProjectReference Include="..\Customer.Manager\Customer.Manager.csproj" />
     <ProjectReference Include="..\Customer.Model\Customer.Model.csproj" />
   </ItemGroup>
 

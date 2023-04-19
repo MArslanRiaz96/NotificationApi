@@ -1,0 +1,17 @@
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.csproj.AssemblyReference.cache
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.GeneratedMSBuildEditorConfig.editorconfig
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.AssemblyInfoInputs.cache
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.AssemblyInfo.cs
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.csproj.CoreCompileInputs.cache
+D:\VS Projects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Manager.deps.json
+D:\VS Projects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Manager.dll
+D:\VS Projects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Manager.pdb
+D:\VS Projects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Data.dll
+D:\VS Projects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Model.dll
+D:\VS Projects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Data.pdb
+D:\VS Projects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Model.pdb
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.csproj.CopyComplete
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.dll
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\refint\Customer.Manager.dll
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.pdb
+D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\ref\Customer.Manager.dll
