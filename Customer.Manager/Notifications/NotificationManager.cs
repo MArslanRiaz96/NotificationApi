@@ -27,7 +27,7 @@ namespace Customer.Manager.Notifications
         {
             try
             {
-                return await _context.Notifications.Where(x=>x.UserEmail == UserEmail).ToListAsync();
+                return await _context.Notifications.Where(x=>x.UserEmail == UserEmail && x.IsRead == false).ToListAsync();
             }
             catch (Exception ex)
             {
