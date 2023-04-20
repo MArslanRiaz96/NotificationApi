@@ -6,7 +6,7 @@ using NotificationApi.Hub;
 
 namespace NotificationApi.Controllers
 {
-   // [Produces("application/json")]
+    [Produces("application/json")]
     [ApiController]
     [Route("api/[controller]")]
     public class NotificationController : ControllerBase
@@ -78,10 +78,8 @@ namespace NotificationApi.Controllers
 
             return retMessage;
         }
-
-        // [HttpGet("GetUnreadNotifications/{userEmail}")]
-        [HttpGet]
-        public async Task<IActionResult> GetUnreadNotifications(string userEmail)
+        [HttpGet("GetUnreadNotifications")]
+        public async Task<IActionResult> GetUnreadNotifications([FromQuery]string userEmail)
         {
             var response = await _notificationManager.GetUnreadNotifications(userEmail);
             return Ok(response);
