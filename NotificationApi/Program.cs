@@ -46,10 +46,12 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction() || app.Env
 app.UseCustomExceptionHandler();
 
 app.UseHttpsRedirection();
-app.UseCors(x => x
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowAnyOrigin());
+app.UseCors(builder2 => builder2
+                               .WithOrigins(builder.Configuration.GetSection("WhiteListOrigins").GetChildren().Select(x => x.Value).ToArray())
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .AllowCredentials()
+                       );
 app.UseAuthorization();
 app.MapHub<NotificationHub>("/notification");
 app.UseMiddleware<LoggingMiddleware>();
