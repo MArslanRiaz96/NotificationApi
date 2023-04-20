@@ -79,7 +79,8 @@ namespace NotificationApi.Controllers
             return retMessage;
         }
 
-        [HttpGet("GetUnreadNotifications/{userEmail}")]
+        // [HttpGet("GetUnreadNotifications/{userEmail}")]
+        [HttpGet]
         public async Task<IActionResult> GetUnreadNotifications(string userEmail)
         {
             var response = await _notificationManager.GetUnreadNotifications(userEmail);
