@@ -16,14 +16,14 @@ namespace NotificationApi.Controllers
         private IHubContext<NotificationHub, INotificationService> _hubContext;
         public INotificationManager _notificationManager;
         public NotificationHub _notificationHub;
-        public NotificationTestHub _notificationTestHub;
+        //public NotificationTestHub _notificationTestHub;
 
-        public NotificationController(NotificationTestHub notificationTestHub,NotificationHub notificationHub, IHubContext<NotificationHub, INotificationService> hubContext, INotificationManager notificationManager)
+        public NotificationController(/*NotificationTestHub notificationTestHub,*/NotificationHub notificationHub, IHubContext<NotificationHub, INotificationService> hubContext, INotificationManager notificationManager)
         {
             _hubContext = hubContext;
             _notificationManager = notificationManager;
             _notificationHub = notificationHub;
-            _notificationTestHub = notificationTestHub;
+           // _notificationTestHub = notificationTestHub;
         }
 
         [HttpPost]
@@ -36,14 +36,14 @@ namespace NotificationApi.Controllers
                 if (string.IsNullOrEmpty(model.UserName))
                 {
                     await _hubContext.Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString());
-                    await _notificationTestHub.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString());
+                   // await _notificationTestHub.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString());
                     await _notificationManager.InsertNotification(model);
                     retMessage = "Success";
                 }
                 else
                 {
                     await _notificationHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
-                    await _notificationTestHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
+                   // await _notificationTestHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
                     await _notificationManager.InsertNotification(model);
                     retMessage = "Success";
                 }
