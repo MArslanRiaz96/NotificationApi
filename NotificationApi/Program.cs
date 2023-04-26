@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using NotificationApi.Extentions;
 using NotificationApi.Filters;
 using NotificationApi.HubService;
+using NotificationApi.TestHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddModelLayer(builder.Configuration);
 builder.Services.AddBusinessLayer(builder.Configuration);
 builder.Services.AddSignalR();
 builder.Services.AddScoped<NotificationHub>();
+builder.Services.AddScoped<NotificationTestHub>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -55,6 +57,7 @@ app.UseCors(builder2 => builder2
                        );
 app.UseAuthorization();
 app.MapHub<NotificationHub>("/notification");
+app.MapHub<NotificationTestHub>("/notificationtest");
 app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 

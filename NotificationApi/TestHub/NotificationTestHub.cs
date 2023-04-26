@@ -1,16 +1,19 @@
 ﻿using Customer.Data.Context;
 using Customer.Data.Models;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 
-namespace NotificationApi.HubService
+namespace NotificationApi.TestHub
 {
-    public class NotificationHub : Hub<INotificationService>
+    public class NotificationTestHub : Hub
     {
         private readonly ApplicationDbContext _dbContext;
-        public NotificationHub(ApplicationDbContext dbContext)
+        public NotificationTestHub(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+        public async Task GetNotificaiton(string Heading, string Message, string UserEmail, string RedirectUrl, string CreatedDate)
+        {
+            await Clients.All.SendAsync("GetNotificaiton", Heading, Message, UserEmail, RedirectUrl, CreatedDate);
         }
         public async Task SaveUserConnection(string username)
         {
@@ -22,7 +25,7 @@ namespace NotificationApi.HubService
             };
 
             _dbContext.HubConnections.Add(hubconnection);
-             await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task SendNotificationToClient(string Heading, string Message, string UserEmail, string RedirectUrl, string CreatedDate, string username)
@@ -30,9 +33,9 @@ namespace NotificationApi.HubService
             var hubConnections = _dbContext.HubConnections.Where(con => con.Username == username).ToList();
             if (hubConnections?.Count() >= 1)
             {
-                await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(Heading, Message, UserEmail, RedirectUrl, CreatedDate, username);
+                await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendAsync("ReceivedPersonalNotification",Heading, Message, UserEmail, RedirectUrl, CreatedDate, username);
             }
-            
+
         }
         public override Task OnConnectedAsync()
         {
@@ -50,5 +53,6 @@ namespace NotificationApi.HubService
 
             return base.OnDisconnectedAsync(exception);
         }
+
     }
 }
