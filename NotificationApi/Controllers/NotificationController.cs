@@ -13,13 +13,13 @@ namespace NotificationApi.Controllers
     {
         private IHubContext<NotificationHub, INotificationService> _hubContext;
         public INotificationManager _notificationManager;
-        //public NotificationHub _notificationHub;
+        public NotificationHub _notificationHub;
 
-        public NotificationController(IHubContext<NotificationHub, INotificationService> hubContext, INotificationManager notificationManager)
+        public NotificationController(NotificationHub notificationHub, IHubContext<NotificationHub, INotificationService> hubContext, INotificationManager notificationManager)
         {
             _hubContext = hubContext;
             _notificationManager = notificationManager;
-            //_notificationHub = notificationHub;
+            _notificationHub = notificationHub;
         }
 
         [HttpPost]
@@ -55,8 +55,8 @@ namespace NotificationApi.Controllers
                 }
                 else
                 {
-                    //await _notificationHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
-                    //retMessage = "Success";
+                    await _notificationHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
+                    retMessage = "Success";
                 }
                 
             }
@@ -88,7 +88,7 @@ namespace NotificationApi.Controllers
                 {
                     foreach (string email in notification.UserEmails)
                     {
-                       // await _notificationHub.SendNotificationToClient(notification.Heading, notification.Message, email, notification.RedirectUrl, DateTime.UtcNow.ToString(), notification.UserName);
+                        await _notificationHub.SendNotificationToClient(notification.Heading, notification.Message, email, notification.RedirectUrl, DateTime.UtcNow.ToString(), notification.UserName);
 
                     }
                     retMessage = "Success";
