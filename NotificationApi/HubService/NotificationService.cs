@@ -34,6 +34,11 @@ namespace NotificationApi.HubService
             }
             
         }
+        public override Task OnConnectedAsync()
+        {
+            Clients.Caller.SendAsync("OnConnected");
+            return base.OnConnectedAsync();
+        }
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             var hubConnection = _dbContext.HubConnections.FirstOrDefault(con => con.ConnectionId == Context.ConnectionId);
