@@ -2,7 +2,7 @@ using Customer.Manager.Notifications;
 using Customer.Model.Notifications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using NotificationApi.Hub;
+using NotificationApi.HubService;
 
 namespace NotificationApi.Controllers
 {
@@ -13,11 +13,13 @@ namespace NotificationApi.Controllers
     {
         private IHubContext<NotificationHub, INotificationService> _hubContext;
         public INotificationManager _notificationManager;
+        public NotificationHub _notificationHub;
 
-        public NotificationController(IHubContext<NotificationHub, INotificationService> hubContext, INotificationManager notificationManager)
+        public NotificationController(NotificationHub notificationHub, IHubContext<NotificationHub, INotificationService> hubContext, INotificationManager notificationManager)
         {
             _hubContext = hubContext;
             _notificationManager = notificationManager;
+            _notificationHub = notificationHub;
         }
 
         [HttpPost]
@@ -46,8 +48,17 @@ namespace NotificationApi.Controllers
 
             try
             {
-                await _hubContext.Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString());
-                retMessage = "Success";
+                if (string.IsNullOrEmpty(model.UserName))
+                {
+                    await _hubContext.Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString());
+                    retMessage = "Success";
+                }
+                else
+                {
+                    await _notificationHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
+                    retMessage = "Success";
+                }
+                
             }
             catch (Exception e)
             {
@@ -64,12 +75,25 @@ namespace NotificationApi.Controllers
 
             try
             {
-                foreach (string email in notification.UserEmails)
+                if (string.IsNullOrEmpty(notification.UserName))
                 {
-                    await _hubContext.Clients.All.GetNotificaiton(notification.Heading, notification.Message, email, notification.RedirectUrl, DateTime.UtcNow.ToString());
+                    foreach (string email in notification.UserEmails)
+                    {
+                        await _hubContext.Clients.All.GetNotificaiton(notification.Heading, notification.Message, email, notification.RedirectUrl, DateTime.UtcNow.ToString());
 
+                    }
+                    retMessage = "Success";
                 }
-                retMessage = "Success";
+                else
+                {
+                    foreach (string email in notification.UserEmails)
+                    {
+                        await _notificationHub.SendNotificationToClient(notification.Heading, notification.Message, email, notification.RedirectUrl, DateTime.UtcNow.ToString(), notification.UserName);
+
+                    }
+                    retMessage = "Success";
+                }
+                
             }
             catch (Exception e)
             {

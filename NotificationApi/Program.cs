@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NotificationApi.Extentions;
 using NotificationApi.Filters;
-using NotificationApi.Hub;
+using NotificationApi.HubService;
 
 var builder = WebApplication.CreateBuilder(args);
 

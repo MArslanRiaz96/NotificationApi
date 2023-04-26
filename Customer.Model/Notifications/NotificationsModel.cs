@@ -12,5 +12,6 @@ namespace Customer.Model.Notifications
         public string Message { get; set; }
         public string UserEmail { get; set; }
         public string RedirectUrl { get; set; }
+        public string UserName { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Customer.Data.Extentions;
 using Customer.Data.Models;
+using System.Data.Common;
 
 namespace Customer.Data.Context
 {
@@ -23,6 +24,7 @@ namespace Customer.Data.Context
         }
         public DbSet<Logging> Loggings { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<HubConnection> HubConnections { get; set; }
         public override int SaveChanges()
         {
             UpdateAuditableProperties();
