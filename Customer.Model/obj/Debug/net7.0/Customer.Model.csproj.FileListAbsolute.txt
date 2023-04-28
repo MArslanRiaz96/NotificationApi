@@ -13,3 +13,18 @@ D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\ref\Customer.Mode
 D:\VS Projects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Data.dll
 D:\VS Projects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Data.pdb
 D:\VS Projects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.csproj.CopyComplete
+D:\VSProjects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Model.deps.json
+D:\VSProjects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Model.dll
+D:\VSProjects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Model.pdb
+D:\VSProjects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Data.dll
+D:\VSProjects\NotificationApi\Customer.Model\bin\Debug\net7.0\Customer.Data.pdb
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.csproj.AssemblyReference.cache
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.AssemblyInfoInputs.cache
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.AssemblyInfo.cs
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.csproj.CoreCompileInputs.cache
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.csproj.CopyComplete
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.dll
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\refint\Customer.Model.dll
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\Customer.Model.pdb
+D:\VSProjects\NotificationApi\Customer.Model\obj\Debug\net7.0\ref\Customer.Model.dll

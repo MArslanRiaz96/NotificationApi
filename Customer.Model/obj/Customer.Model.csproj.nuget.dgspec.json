@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\VS Projects\\NotificationApi\\Customer.Model\\Customer.Model.csproj": {}
+    "D:\\VSProjects\\NotificationApi\\Customer.Model\\Customer.Model.csproj": {}
   },
   "projects": {
-    "D:\\VS Projects\\NotificationApi\\Customer.Data\\Customer.Data.csproj": {
+    "D:\\VSProjects\\NotificationApi\\Customer.Data\\Customer.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\VS Projects\\NotificationApi\\Customer.Data\\Customer.Data.csproj",
+        "projectUniqueName": "D:\\VSProjects\\NotificationApi\\Customer.Data\\Customer.Data.csproj",
         "projectName": "Customer.Data",
-        "projectPath": "D:\\VS Projects\\NotificationApi\\Customer.Data\\Customer.Data.csproj",
-        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "D:\\VS Projects\\NotificationApi\\Customer.Data\\obj\\",
+        "projectPath": "D:\\VSProjects\\NotificationApi\\Customer.Data\\Customer.Data.csproj",
+        "packagesPath": "C:\\Users\\arslan.riaz\\.nuget\\packages\\",
+        "outputPath": "D:\\VSProjects\\NotificationApi\\Customer.Data\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\arslan.riaz\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -79,25 +75,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\VS Projects\\NotificationApi\\Customer.Model\\Customer.Model.csproj": {
+    "D:\\VSProjects\\NotificationApi\\Customer.Model\\Customer.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\VS Projects\\NotificationApi\\Customer.Model\\Customer.Model.csproj",
+        "projectUniqueName": "D:\\VSProjects\\NotificationApi\\Customer.Model\\Customer.Model.csproj",
         "projectName": "Customer.Model",
-        "projectPath": "D:\\VS Projects\\NotificationApi\\Customer.Model\\Customer.Model.csproj",
-        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "D:\\VS Projects\\NotificationApi\\Customer.Model\\obj\\",
+        "projectPath": "D:\\VSProjects\\NotificationApi\\Customer.Model\\Customer.Model.csproj",
+        "packagesPath": "C:\\Users\\arslan.riaz\\.nuget\\packages\\",
+        "outputPath": "D:\\VSProjects\\NotificationApi\\Customer.Model\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\arslan.riaz\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -111,8 +103,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\VS Projects\\NotificationApi\\Customer.Data\\Customer.Data.csproj": {
-                "projectPath": "D:\\VS Projects\\NotificationApi\\Customer.Data\\Customer.Data.csproj"
+              "D:\\VSProjects\\NotificationApi\\Customer.Data\\Customer.Data.csproj": {
+                "projectPath": "D:\\VSProjects\\NotificationApi\\Customer.Data\\Customer.Data.csproj"
               }
             }
           }
@@ -160,7 +152,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

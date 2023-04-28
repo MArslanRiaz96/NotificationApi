@@ -12,3 +12,17 @@ D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\refint\Customer.Da
 D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.pdb
 D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.genruntimeconfig.cache
 D:\VS Projects\NotificationApi\Customer.Data\obj\Debug\net7.0\ref\Customer.Data.dll
+D:\VSProjects\NotificationApi\Customer.Data\bin\Debug\net7.0\Customer.Data.deps.json
+D:\VSProjects\NotificationApi\Customer.Data\bin\Debug\net7.0\Customer.Data.runtimeconfig.json
+D:\VSProjects\NotificationApi\Customer.Data\bin\Debug\net7.0\Customer.Data.dll
+D:\VSProjects\NotificationApi\Customer.Data\bin\Debug\net7.0\Customer.Data.pdb
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.csproj.AssemblyReference.cache
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.AssemblyInfoInputs.cache
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.AssemblyInfo.cs
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.csproj.CoreCompileInputs.cache
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.dll
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\refint\Customer.Data.dll
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.pdb
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\Customer.Data.genruntimeconfig.cache
+D:\VSProjects\NotificationApi\Customer.Data\obj\Debug\net7.0\ref\Customer.Data.dll

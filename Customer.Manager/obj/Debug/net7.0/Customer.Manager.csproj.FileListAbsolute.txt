@@ -15,3 +15,20 @@ D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manage
 D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\refint\Customer.Manager.dll
 D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.pdb
 D:\VS Projects\NotificationApi\Customer.Manager\obj\Debug\net7.0\ref\Customer.Manager.dll
+D:\VSProjects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Manager.deps.json
+D:\VSProjects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Manager.dll
+D:\VSProjects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Manager.pdb
+D:\VSProjects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Data.dll
+D:\VSProjects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Model.dll
+D:\VSProjects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Data.pdb
+D:\VSProjects\NotificationApi\Customer.Manager\bin\Debug\net7.0\Customer.Model.pdb
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.csproj.AssemblyReference.cache
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.GeneratedMSBuildEditorConfig.editorconfig
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.AssemblyInfoInputs.cache
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.AssemblyInfo.cs
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.csproj.CoreCompileInputs.cache
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.csproj.CopyComplete
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.dll
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\refint\Customer.Manager.dll
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\Customer.Manager.pdb
+D:\VSProjects\NotificationApi\Customer.Manager\obj\Debug\net7.0\ref\Customer.Manager.dll
