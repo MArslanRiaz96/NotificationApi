@@ -89,7 +89,7 @@ namespace Customer.Manager.Notifications
             }
         }
 
-        public async Task MarkNotificationRead(string UserEmail, string notificationId = "")
+        public async Task MarkNotificationRead(string UserEmail= "", string notificationId = "")
         {
             var transaction = _context.Database.BeginTransaction();
             try
