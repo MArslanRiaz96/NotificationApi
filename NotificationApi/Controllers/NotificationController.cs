@@ -3,8 +3,8 @@ using Customer.Manager.Notifications;
 using Customer.Model.Notifications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using NotificationApi.HubService;
-using NotificationApi.TestHub;
 
 namespace NotificationApi.Controllers
 {
@@ -15,47 +15,15 @@ namespace NotificationApi.Controllers
     {
         private IHubContext<NotificationHub, INotificationService> _hubContext;
         public INotificationManager _notificationManager;
-        public NotificationHub _notificationHub;
-        //public NotificationTestHub _notificationTestHub;
+        private readonly IHubContext<NotificationHub> _notificationHub;
 
-        public NotificationController(/*NotificationTestHub notificationTestHub,*/NotificationHub notificationHub, IHubContext<NotificationHub, INotificationService> hubContext, INotificationManager notificationManager)
+        public NotificationController(IHubContext<NotificationHub> notificationHub, IHubContext<NotificationHub, INotificationService> hubContext, INotificationManager notificationManager)
         {
             _hubContext = hubContext;
             _notificationManager = notificationManager;
             _notificationHub = notificationHub;
-           // _notificationTestHub = notificationTestHub;
         }
-
         [HttpPost]
-        public async Task<string> Post([FromBody] NotificationsModel model)
-        {
-            string retMessage = string.Empty;
-
-            try
-            {
-                if (string.IsNullOrEmpty(model.UserName))
-                {
-                    await _hubContext.Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString());
-                   // await _notificationTestHub.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString());
-                    await _notificationManager.InsertNotification(model);
-                    retMessage = "Success";
-                }
-                else
-                {
-                    await _notificationHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
-                   // await _notificationTestHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
-                    await _notificationManager.InsertNotification(model);
-                    retMessage = "Success";
-                }
-            }
-            catch (Exception e)
-            {
-                retMessage = e.ToString();
-            }
-
-            return retMessage;
-        }
-        [HttpPost("PushNotification")]
         public async Task<string> PushNotification([FromBody] NotificationsModel model)
         {
             string retMessage = string.Empty;
@@ -64,17 +32,22 @@ namespace NotificationApi.Controllers
             {
                 if (string.IsNullOrEmpty(model.UserName))
                 {
-                    await _hubContext.Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString());
-                    await _notificationManager.InsertNotification(model);
+                    string notificationId = await _notificationManager.InsertNotification(model);
+                    await _hubContext.Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), notificationId, false);
+
                     retMessage = "Success";
                 }
                 else
                 {
-                    await _notificationHub.SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
-                    await _notificationManager.InsertNotification(model);
+                    var hubConnections = await _notificationManager.GetUserConnections(model.UserName);
+                    if (hubConnections?.Count() >= 1)
+                    {
+                        string notificationId = await _notificationManager.InsertNotification(model);
+                        await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(),notificationId, false, model.UserName);
+                    }
                     retMessage = "Success";
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -85,31 +58,36 @@ namespace NotificationApi.Controllers
         }
 
         [HttpPost("PublishBulkNotification")]
-        public async Task<string> PublishBulkNotification([FromBody] BulkNotificationModel notification)
+        public async Task<string> PublishBulkNotification([FromBody] BulkNotificationModel model)
         {
             string retMessage = string.Empty;
 
             try
             {
-                if (string.IsNullOrEmpty(notification.UserName))
+                if (string.IsNullOrEmpty(model.UserName))
                 {
-                    foreach (string email in notification.UserEmails)
+                    foreach (string email in model.UserEmails)
                     {
-                        await _hubContext.Clients.All.GetNotificaiton(notification.Heading, notification.Message, email, notification.RedirectUrl, DateTime.UtcNow.ToString());
+                        //string notificationId = await _notificationManager.InsertNotification(model);
+                        //await _hubContext.Clients.All.GetNotificaiton(model.Heading, model.Message, email, model.RedirectUrl, DateTime.UtcNow.ToString());
 
                     }
                     retMessage = "Success";
                 }
                 else
                 {
-                    foreach (string email in notification.UserEmails)
+                    foreach (string email in model.UserEmails)
                     {
-                        await _notificationHub.SendNotificationToClient(notification.Heading, notification.Message, email, notification.RedirectUrl, DateTime.UtcNow.ToString(), notification.UserName);
-
+                        var hubConnections = await _notificationManager.GetUserConnections(model.UserName);
+                        if (hubConnections?.Count() >= 1)
+                        {
+                            //string notificationId = await _notificationManager.InsertNotification(model);
+                            //await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(model.Heading, model.Message, email, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
+                        }
                     }
                     retMessage = "Success";
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -119,7 +97,7 @@ namespace NotificationApi.Controllers
             return retMessage;
         }
         [HttpGet("GetUnreadNotifications")]
-        public async Task<IActionResult> GetUnreadNotifications([FromQuery]string userEmail)
+        public async Task<IActionResult> GetUnreadNotifications([FromQuery] string userEmail)
         {
             var response = await _notificationManager.GetUnreadNotifications(userEmail);
             return Ok(response);
