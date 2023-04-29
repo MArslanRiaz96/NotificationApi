@@ -97,16 +97,16 @@ namespace NotificationApi.Controllers
             return retMessage;
         }
         [HttpGet("GetUnreadNotifications")]
-        public async Task<IActionResult> GetUnreadNotifications([FromQuery] string userEmail)
+        public async Task<IActionResult> GetUnreadNotifications([FromQuery] string userEmail, string notificationId = "")
         {
-            var response = await _notificationManager.GetUnreadNotifications(userEmail);
+            var response = await _notificationManager.GetUnreadNotifications(userEmail, notificationId);
             return Ok(response);
         }
 
         [HttpPost("MarkNotificationRead")]
-        public async Task<IActionResult> MarkNotificationRead([FromBody] string userEmail)
+        public async Task<IActionResult> MarkNotificationRead([FromBody] string userEmail, string notificationId = "")
         {
-            await _notificationManager.MarkNotificationRead(userEmail);
+            await _notificationManager.MarkNotificationRead(userEmail, notificationId);
             return Ok();
         }
     }
