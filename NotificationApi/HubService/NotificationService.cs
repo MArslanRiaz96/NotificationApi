@@ -1,6 +1,7 @@
 ﻿using Customer.Data.Context;
 using Customer.Data.Models;
 using Customer.Manager.Notifications;
+using Customer.Model.Notifications;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,12 +50,15 @@ namespace NotificationApi.HubService
         public async Task GetUnreadNotifications(string userEmail,string productId, string notificationId = "")
         {
             var response = await _notificationManager.GetUnreadNotifications(userEmail, productId, notificationId);
-
-           // Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), notificationId, false)
+            var hubConnections = await _notificationManager.GetUserConnections(userEmail, productId);
+            if (hubConnections?.Count() >= 1)
+            {
+                await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(response);
+            }
         }
-        public async Task MarkNotificationRead(string userEmail, string notificationId = "")
+        public async Task MarkNotificationRead(string userEmail, string productId, string notificationId = "")
         {
-             await _notificationManager.MarkNotificationRead(userEmail, notificationId);
+             await _notificationManager.MarkNotificationRead(userEmail, productId, notificationId);
         }
 
         //public async Task SendNotificationToClient(string Heading, string Message, string UserEmail, string RedirectUrl, string CreatedDate, string username)

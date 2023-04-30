@@ -100,6 +100,15 @@ namespace Customer.Manager.Notifications
                 if (notifications != null && notifications.Count > 0)
                 {
                     notifications.ForEach(x => x.IsRead = true);
+                    // Detach the existing tracked entities with the same key values
+                    foreach (var notification in notifications)
+                    {
+                        var existingNotification = _context.Notifications.Local.FirstOrDefault(n => n.Id == notification.Id);
+                        if (existingNotification != null)
+                        {
+                            _context.Entry(existingNotification).State = EntityState.Detached;
+                        }
+                    }
                     _context.Notifications.UpdateRange(notifications);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
