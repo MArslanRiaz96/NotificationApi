@@ -23,17 +23,19 @@ namespace Customer.Manager.Notifications
             _mapper = mapper;
         }
 
-        public async Task<List<Notification>> GetUnreadNotifications(string UserEmail, string productId, string notificationId = "")
+        public async Task<List<PushNotificationModel>> GetUnreadNotifications(string UserEmail, string productId, string notificationId = "")
         {
             try
             {
                 if (string.IsNullOrEmpty(notificationId))
                 {
-                    return await _context.Notifications.Where(x => x.UserEmail == UserEmail && x.ProductId == productId && x.IsRead == false).ToListAsync();
+                    var notification =  await _context.Notifications.Where(x => x.UserEmail == UserEmail && x.ProductId == productId && x.IsRead == false).ToListAsync();
+                    return _mapper.Map<List<PushNotificationModel>>(notification);
                 }
                 else
                 {
-                    return await _context.Notifications.Where(x => x.Id == notificationId && x.ProductId == productId && x.IsRead == false).ToListAsync();
+                    var notification = await _context.Notifications.Where(x => x.Id == notificationId && x.ProductId == productId && x.IsRead == false).ToListAsync();
+                    return _mapper.Map<List<PushNotificationModel>>(notification);
                 }
 
             }
@@ -92,7 +94,9 @@ namespace Customer.Manager.Notifications
             var transaction = _context.Database.BeginTransaction();
             try
             {
-                List<Notification> notifications = await GetUnreadNotifications(userEmail, productId, notificationId);
+                List<PushNotificationModel> pushNotifications = await GetUnreadNotifications(userEmail, productId, notificationId);
+                var notifications = _mapper.Map<List<Notification>>(pushNotifications);
+
                 if (notifications != null && notifications.Count > 0)
                 {
                     notifications.ForEach(x => x.IsRead = true);

@@ -46,10 +46,11 @@ namespace NotificationApi.HubService
             return response;
         }
 
-        public async Task GetUnreadNotifications(string userEmail, string notificationId = "")
+        public async Task GetUnreadNotifications(string userEmail,string productId, string notificationId = "")
         {
-            var response = await _notificationManager.GetUnreadNotifications(userEmail, notificationId);
-            //Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), notificationId, false)
+            var response = await _notificationManager.GetUnreadNotifications(userEmail, productId, notificationId);
+
+           // Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), notificationId, false)
         }
         public async Task MarkNotificationRead(string userEmail, string notificationId = "")
         {

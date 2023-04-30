@@ -15,6 +15,7 @@ namespace Customer.Model.Mappings
         {
             CreateMap<Notification, NotificationsModel>();
             CreateMap<NotificationsModel, Notification>();
+            CreateMap<PushNotificationModel, Notification>().ReverseMap();
         }
     }
 }
