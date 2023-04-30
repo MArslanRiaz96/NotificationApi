@@ -30,24 +30,33 @@ namespace NotificationApi.Controllers
 
             try
             {
-                if (string.IsNullOrEmpty(model.UserName))
+                if (!string.IsNullOrEmpty(model.Heading) && !string.IsNullOrEmpty(model.Message) && !string.IsNullOrEmpty(model.UserEmail) && !string.IsNullOrEmpty(model.ProductId))
                 {
-                    string notificationId = await _notificationManager.InsertNotification(model);
-                    await _hubContext.Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), notificationId, false);
+                    if (!model.IsSpecific)
+                    {
+                        string notificationId = await _notificationManager.InsertNotification(model);
 
-                    retMessage = "Success";
+                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedDate = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
+                        await _hubContext.Clients.All.GetNotificaiton(notificationPush);
+
+                        retMessage = "Success";
+                    }
+                    else
+                    {
+                        var hubConnections = await _notificationManager.GetUserConnections(model.UserEmail,model.ProductId);
+                        if (hubConnections?.Count() >= 1)
+                        {
+                            string notificationId = await _notificationManager.InsertNotification(model);
+                            var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedDate = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
+                            await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(notificationPush);
+                        }
+                        retMessage = "Success";
+                    }
                 }
                 else
                 {
-                    var hubConnections = await _notificationManager.GetUserConnections(model.UserName);
-                    if (hubConnections?.Count() >= 1)
-                    {
-                        string notificationId = await _notificationManager.InsertNotification(model);
-                        await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(),notificationId, false, model.UserName);
-                    }
-                    retMessage = "Success";
+                    retMessage = "Can't enter null or Empty values in Heading, Message, UserEmail and ProducdId";
                 }
-
             }
             catch (Exception e)
             {
@@ -78,12 +87,12 @@ namespace NotificationApi.Controllers
                 {
                     foreach (string email in model.UserEmails)
                     {
-                        var hubConnections = await _notificationManager.GetUserConnections(model.UserName);
-                        if (hubConnections?.Count() >= 1)
-                        {
-                            //string notificationId = await _notificationManager.InsertNotification(model);
-                            //await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(model.Heading, model.Message, email, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
-                        }
+                        //var hubConnections = await _notificationManager.GetUserConnections(model.UserName);
+                        //if (hubConnections?.Count() >= 1)
+                        //{
+                        //    //string notificationId = await _notificationManager.InsertNotification(model);
+                        //    //await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(model.Heading, model.Message, email, model.RedirectUrl, DateTime.UtcNow.ToString(), model.UserName);
+                        //}
                     }
                     retMessage = "Success";
                 }
@@ -97,16 +106,16 @@ namespace NotificationApi.Controllers
             return retMessage;
         }
         [HttpGet("GetUnreadNotifications")]
-        public async Task<IActionResult> GetUnreadNotifications([FromQuery] string userEmail, string notificationId = "")
+        public async Task<IActionResult> GetUnreadNotifications([FromQuery] string userEmail, string productId, string notificationId = "")
         {
-            var response = await _notificationManager.GetUnreadNotifications(userEmail, notificationId);
+            var response = await _notificationManager.GetUnreadNotifications(userEmail, productId, notificationId);
             return Ok(response);
         }
 
         [HttpPost("MarkNotificationRead")]
-        public async Task<IActionResult> MarkNotificationRead([FromBody] string userEmail, string notificationId = "")
+        public async Task<IActionResult> MarkNotificationRead([FromBody] string userEmail, string productId, string notificationId = "")
         {
-            await _notificationManager.MarkNotificationRead(userEmail, notificationId);
+            await _notificationManager.MarkNotificationRead(userEmail, productId, notificationId);
             return Ok();
         }
     }

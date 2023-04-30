@@ -23,17 +23,17 @@ namespace Customer.Manager.Notifications
             _mapper = mapper;
         }
 
-        public async Task<List<Notification>> GetUnreadNotifications(string UserEmail, string notificationId = "")
+        public async Task<List<Notification>> GetUnreadNotifications(string UserEmail, string productId, string notificationId = "")
         {
             try
             {
                 if (string.IsNullOrEmpty(notificationId))
                 {
-                    return await _context.Notifications.Where(x => x.UserEmail == UserEmail && x.IsRead == false).ToListAsync();
+                    return await _context.Notifications.Where(x => x.UserEmail == UserEmail && x.ProductId == productId && x.IsRead == false).ToListAsync();
                 }
                 else
                 {
-                    return await _context.Notifications.Where(x => x.Id == notificationId && x.IsRead == false).ToListAsync();
+                    return await _context.Notifications.Where(x => x.Id == notificationId && x.ProductId == productId && x.IsRead == false).ToListAsync();
                 }
 
             }
@@ -62,9 +62,9 @@ namespace Customer.Manager.Notifications
             }
         }
 
-        public async Task<List<HubConnection>> GetUserConnections(string UserName)
+        public async Task<List<HubConnection>> GetUserConnections(string UserName,string productId)
         {
-            return await _context.HubConnections.Where(con => con.Username == UserName).ToListAsync();
+            return await _context.HubConnections.Where(con => con.Username == UserName && con.ProductId == productId).ToListAsync();
         }
 
         public async Task<string> InsertNotification(NotificationsModel notification)
@@ -75,8 +75,6 @@ namespace Customer.Manager.Notifications
                 var notifications = _mapper.Map<Notification>(notification);
 
                 notifications.Id = Guid.NewGuid().ToString();
-                notifications.CreatedBy = "Api";
-                notifications.ModifiedBy = "Api";
                 _context.Notifications.Add(notifications);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -89,12 +87,12 @@ namespace Customer.Manager.Notifications
             }
         }
 
-        public async Task MarkNotificationRead(string UserEmail= "", string notificationId = "")
+        public async Task MarkNotificationRead(string userEmail, string productId, string notificationId = "")
         {
             var transaction = _context.Database.BeginTransaction();
             try
             {
-                List<Notification> notifications = await GetUnreadNotifications(UserEmail, notificationId);
+                List<Notification> notifications = await GetUnreadNotifications(userEmail, productId, notificationId);
                 if (notifications != null && notifications.Count > 0)
                 {
                     notifications.ForEach(x => x.IsRead = true);

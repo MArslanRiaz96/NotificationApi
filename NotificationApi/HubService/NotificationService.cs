@@ -15,7 +15,7 @@ namespace NotificationApi.HubService
             _dbContext = dbContext;
             _notificationManager = notificationManager;
         }
-        public async Task SaveUserConnection(string username)
+        public async Task SaveUserConnection(string userName, string productId)
         {
             var transaction = _dbContext.Database.BeginTransaction();
             try
@@ -24,7 +24,9 @@ namespace NotificationApi.HubService
                 HubConnection hubconnection = new HubConnection
                 {
                     ConnectionId = connectionid,
-                    Username = username
+                    Username = userName,
+                    ProductId = productId,
+                    CreatedOn = DateTime.UtcNow
                 };
 
                 hubconnection.Id = Guid.NewGuid().ToString();
@@ -38,11 +40,16 @@ namespace NotificationApi.HubService
                 throw;
             }
         }
-
         public async Task<List<Notification>> GetNotifications(string userEmail)
         {
             var response = await _notificationManager.GetNotifications(userEmail);
             return response;
+        }
+
+        public async Task GetUnreadNotifications(string userEmail, string notificationId = "")
+        {
+            var response = await _notificationManager.GetUnreadNotifications(userEmail, notificationId);
+            //Clients.All.GetNotificaiton(model.Heading, model.Message, model.UserEmail, model.RedirectUrl, DateTime.UtcNow.ToString(), notificationId, false)
         }
         public async Task MarkNotificationRead(string userEmail, string notificationId = "")
         {

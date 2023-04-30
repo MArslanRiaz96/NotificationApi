@@ -8,10 +8,14 @@ namespace Customer.Model.Notifications
 {
     public class NotificationsModel
     {
-        public string Heading { get; set; }
-        public string Message { get; set; }
-        public string UserEmail { get; set; }
+        public string Id { get; set; }
+        public string Heading { get; set; }  = null!;
+        public string Message { get; set; } = null!;
+        public string UserEmail { get; set; } = null!;
         public string RedirectUrl { get; set; }
-        public string UserName { get; set; }
+        public bool IsSpecific { get; set; } = false;
+        public string ProductId { get; set; } = null!;
+
+
     }
 }

@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace Customer.Data.Models
 {
-    public class HubConnection : ISoftDelete
+    public class HubConnection
     {
         [Key]
         public string Id { get; set; }
         public string ConnectionId { get; set; } = null!;
         public string Username { get; set; } = null!;
-        public bool IsActive { get; set; } = true;
+        public string ProductId { get; set; }
+        public virtual Product Products { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

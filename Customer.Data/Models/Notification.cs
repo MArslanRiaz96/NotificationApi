@@ -1,4 +1,5 @@
 ﻿using Customer.Data.Common;
+using Customer.Data.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Customer.Data.Models
 {
-    public class Notification : FullyAuditableEntity
+    public class Notification : ISoftDelete
     {
         [Key]
         public string Id { get; set; }
@@ -17,6 +18,9 @@ namespace Customer.Data.Models
         public virtual string UserEmail { get; set; }
         public virtual Boolean IsRead { get; set; }
         public virtual string RedirectUrl { get; set; }
+        public string ProductId { get; set; }
+        public virtual Product Products { get; set; }
+        public bool IsActive { get; set; } = true;
 
 
     }
