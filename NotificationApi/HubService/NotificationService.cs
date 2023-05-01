@@ -41,10 +41,14 @@ namespace NotificationApi.HubService
                 throw;
             }
         }
-        public async Task<List<Notification>> GetNotifications(string userEmail)
+        public async Task GetReadNotifications(string userEmail, string productId, int page, int pageSize = 10)
         {
-            var response = await _notificationManager.GetNotifications(userEmail);
-            return response;
+            var response = await _notificationManager.GetReadNotifications(userEmail, productId, page, pageSize);
+            var hubConnections = await _notificationManager.GetUserConnections(userEmail, productId);
+            if (hubConnections?.Count() >= 1)
+            {
+                await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(response);
+            }
         }
 
         public async Task GetUnreadNotifications(string userEmail,string productId, string notificationId = "")

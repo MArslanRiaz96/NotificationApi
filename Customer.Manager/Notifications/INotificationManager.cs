@@ -13,7 +13,7 @@ namespace Customer.Manager.Notifications
         public Task<string> InsertNotification(NotificationsModel notification);
         public Task<List<HubConnection>> GetUserConnections(string UserName, string productId);
         Task<List<PushNotificationModel>> GetUnreadNotifications(string userEmail, string productId, string notificationId = "");
-        Task<List<Notification>> GetNotifications(string UserEmail, string notificationId = "");
+        Task<List<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize = 10);
         public Task MarkNotificationRead(string userEmail, string productId, string notificationId = "");
     }
 }

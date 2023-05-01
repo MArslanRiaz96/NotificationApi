@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Customer.Data.Context;
+using Customer.Data.Extentions;
 using Customer.Data.Models;
 using Customer.Model.Notifications;
 using Microsoft.AspNetCore.SignalR;
@@ -29,12 +30,12 @@ namespace Customer.Manager.Notifications
             {
                 if (string.IsNullOrEmpty(notificationId))
                 {
-                    var notification =  await _context.Notifications.Where(x => x.UserEmail == UserEmail && x.ProductId == productId && x.IsRead == false).ToListAsync();
+                    var notification =  await _context.Notifications.Where(x => x.UserEmail == UserEmail && x.ProductId == productId && x.IsRead == false).OrderByDescending(x=>x.CreatedOn).ToListAsync();
                     return _mapper.Map<List<PushNotificationModel>>(notification);
                 }
                 else
                 {
-                    var notification = await _context.Notifications.Where(x => x.Id == notificationId && x.ProductId == productId && x.IsRead == false).ToListAsync();
+                    var notification = await _context.Notifications.Where(x => x.Id == notificationId && x.ProductId == productId && x.IsRead == false).OrderByDescending(x => x.CreatedOn).ToListAsync();
                     return _mapper.Map<List<PushNotificationModel>>(notification);
                 }
 
@@ -44,19 +45,20 @@ namespace Customer.Manager.Notifications
                 throw;
             }
         }
-        public async Task<List<Notification>> GetNotifications(string UserEmail, string notificationId = "")
+        public async Task<List<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize)
         {
             try
             {
-                if (string.IsNullOrEmpty(notificationId))
+                if (!string.IsNullOrEmpty(userEmail) && !string.IsNullOrEmpty(productId))
                 {
-                    return await _context.Notifications.Where(x => x.UserEmail == UserEmail).Take(30).ToListAsync();
+                    var result = await PaginationHelper.PaginateAsync(_context.Notifications.Where(x => x.UserEmail == userEmail && x.IsRead == true).OrderBy(x=>x.CreatedOn).AsQueryable(), page, pageSize);
+                    var test = result.TotalItemCount ;
+                    var test2 = result.HasPreviousPage;
+                    var test3 = result.HasNextPage;
+                    var test4 = result.IsLastPage;
+                    return _mapper.Map<List<PushNotificationModel>>(result);
                 }
-                else
-                {
-                    return await _context.Notifications.Where(x => x.Id == notificationId).ToListAsync();
-                }
-
+                return new List<PushNotificationModel>();
             }
             catch (Exception ex)
             {
@@ -77,6 +79,7 @@ namespace Customer.Manager.Notifications
                 var notifications = _mapper.Map<Notification>(notification);
 
                 notifications.Id = Guid.NewGuid().ToString();
+                notifications.CreatedOn = DateTime.UtcNow;
                 _context.Notifications.Add(notifications);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

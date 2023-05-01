@@ -21,6 +21,7 @@ namespace Customer.Data.Models
         public string ProductId { get; set; }
         public virtual Product Products { get; set; }
         public bool IsActive { get; set; } = true;
+        public DateTime CreatedOn { get; set; }
 
 
     }
