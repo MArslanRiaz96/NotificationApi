@@ -65,15 +65,29 @@ namespace NotificationApi.HubService
              await _notificationManager.MarkNotificationRead(userEmail, productId, notificationId);
         }
 
-        //public async Task SendNotificationToClient(string Heading, string Message, string UserEmail, string RedirectUrl, string CreatedDate, string username)
-        //{
-        //    var hubConnections = _dbContext.HubConnections.Where(con => con.Username == username).ToList();
-        //    if (hubConnections?.Count() >= 1)
-        //    {
-        //        await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(Heading, Message, UserEmail, RedirectUrl, CreatedDate, username);
-        //    }
+        public async Task PushNotification(NotificationsModel model)
+        {
+            if (!string.IsNullOrEmpty(model.Heading) && !string.IsNullOrEmpty(model.Message) && !string.IsNullOrEmpty(model.UserEmail) && !string.IsNullOrEmpty(model.ProductId))
+            {
+                if (!model.IsSpecific)
+                {
+                    string notificationId = await _notificationManager.InsertNotification(model);
 
-        //}
+                    var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedDate = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
+                    await Clients.All.GetNotificaiton(notificationPush);
+                }
+                else
+                {
+                    var hubConnections = await _notificationManager.GetUserConnections(model.UserEmail, model.ProductId);
+                    if (hubConnections?.Count() >= 1)
+                    {
+                        string notificationId = await _notificationManager.InsertNotification(model);
+                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedDate = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
+                        await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(notificationPush);
+                    }
+                }
+            }
+        }
         public override Task OnConnectedAsync()
         {
             Clients.Caller.SendAsync("OnConnected");
