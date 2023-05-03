@@ -79,7 +79,7 @@ namespace Customer.Manager.Notifications
                 var notifications = _mapper.Map<Notification>(notification);
 
                 notifications.Id = Guid.NewGuid().ToString();
-                notifications.CreatedOn = DateTime.UtcNow;
+                notifications.CreatedOn = DateTime.Now;
                 _context.Notifications.Add(notifications);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

@@ -73,7 +73,7 @@ namespace NotificationApi.HubService
                 {
                     string notificationId = await _notificationManager.InsertNotification(model);
 
-                    var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedDate = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
+                    var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
                     await Clients.All.GetNotificaiton(notificationPush);
                 }
                 else
@@ -82,7 +82,7 @@ namespace NotificationApi.HubService
                     if (hubConnections?.Count() >= 1)
                     {
                         string notificationId = await _notificationManager.InsertNotification(model);
-                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedDate = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
+                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
                         await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(notificationPush);
                     }
                 }
