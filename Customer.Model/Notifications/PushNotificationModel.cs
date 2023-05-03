@@ -16,6 +16,6 @@ namespace Customer.Model.Notifications
         public bool IsSpecific { get; set; } = false;
         public string ProductId { get; set; } = null!;
         public bool IsRead { get; set; } = false;
-        public string CreatedDate { get; set; }
+        public string CreatedOn { get; set; }
     }
 }
