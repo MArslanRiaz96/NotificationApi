@@ -51,7 +51,7 @@ namespace Customer.Manager.Notifications
             {
                 if (!string.IsNullOrEmpty(userEmail) && !string.IsNullOrEmpty(productId))
                 {
-                    var result = await PaginationHelper.PaginateAsync(_context.Notifications.Where(x => x.UserEmail == userEmail && x.IsRead == true).OrderBy(x=>x.CreatedOn).AsQueryable(), page, pageSize);
+                    var result = await PaginationHelper.PaginateAsync(_context.Notifications.Where(x => x.UserEmail == userEmail && x.IsRead == true).OrderByDescending(x=>x.CreatedOn).AsQueryable(), page, pageSize);
                     var test = result.TotalItemCount ;
                     var test2 = result.HasPreviousPage;
                     var test3 = result.HasNextPage;
