@@ -1,6 +1,7 @@
 ﻿using Customer.Data.Context;
 using Customer.Data.Models;
 using Customer.Manager.Notifications;
+using Customer.Model.Common;
 using Customer.Model.Notifications;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -41,14 +42,16 @@ namespace NotificationApi.HubService
                 throw;
             }
         }
-        public async Task GetReadNotifications(string userEmail, string productId, int page, int pageSize = 10)
+        public async Task<PagedResult<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize = 10)
         {
             var response = await _notificationManager.GetReadNotifications(userEmail, productId, page, pageSize);
             var hubConnections = await _notificationManager.GetUserConnections(userEmail, productId);
             if (hubConnections?.Count() >= 1)
             {
-                await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(response);
+                await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(response.Results.ToList());
             }
+            response.Results = new List<PushNotificationModel>(); 
+            return response;
         }
 
         public async Task GetUnreadNotifications(string userEmail, string productId, string notificationId = "")
