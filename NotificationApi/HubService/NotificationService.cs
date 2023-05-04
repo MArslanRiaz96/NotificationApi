@@ -51,7 +51,7 @@ namespace NotificationApi.HubService
             }
         }
 
-        public async Task GetUnreadNotifications(string userEmail,string productId, string notificationId = "")
+        public async Task GetUnreadNotifications(string userEmail, string productId, string notificationId = "")
         {
             var response = await _notificationManager.GetUnreadNotifications(userEmail, productId, notificationId);
             var hubConnections = await _notificationManager.GetUserConnections(userEmail, productId);
@@ -62,7 +62,7 @@ namespace NotificationApi.HubService
         }
         public async Task MarkNotificationRead(string userEmail, string productId, string notificationId = "")
         {
-             await _notificationManager.MarkNotificationRead(userEmail, productId, notificationId);
+            await _notificationManager.MarkNotificationRead(userEmail, productId, notificationId);
         }
 
         public async Task PushNotification(NotificationsModel model)
@@ -74,7 +74,7 @@ namespace NotificationApi.HubService
                     string notificationId = await _notificationManager.InsertNotification(model);
 
                     var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
-                    await Clients.All.GetNotificaiton(notificationPush);
+                    await Clients.Group(model.ProductId).GetNotificaiton(notificationPush);
                 }
                 else
                 {
@@ -93,16 +93,26 @@ namespace NotificationApi.HubService
             Clients.Caller.SendAsync("OnConnected");
             return base.OnConnectedAsync();
         }
-        public override Task OnDisconnectedAsync(Exception? exception)
+        public override async Task<Task> OnDisconnectedAsync(Exception? exception)
         {
             var hubConnection = _dbContext.HubConnections.FirstOrDefault(con => con.ConnectionId == Context.ConnectionId);
             if (hubConnection != null)
             {
                 _dbContext.HubConnections.Remove(hubConnection);
                 _dbContext.SaveChangesAsync();
-            }
 
+                await RemoveFromGroup(hubConnection?.ProductId);
+            }
             return base.OnDisconnectedAsync(exception);
+        }
+        public async Task RemoveFromGroup(string groupName)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+        }
+
+        public async Task AddToGroup(string groupName)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
     }
 }
