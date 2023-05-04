@@ -2,6 +2,7 @@
 using Customer.Data.Context;
 using Customer.Data.Extentions;
 using Customer.Data.Models;
+using Customer.Model.Common;
 using Customer.Model.Notifications;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +46,7 @@ namespace Customer.Manager.Notifications
                 throw;
             }
         }
-        public async Task<List<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize)
+        public async Task<PagedResult<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize)
         {
             try
             {
@@ -56,9 +57,19 @@ namespace Customer.Manager.Notifications
                     var test2 = result.HasPreviousPage;
                     var test3 = result.HasNextPage;
                     var test4 = result.IsLastPage;
-                    return _mapper.Map<List<PushNotificationModel>>(result);
+                    var pushNotification = _mapper.Map<List<PushNotificationModel>>(result);
+                    var pagedresult = new PagedResult<PushNotificationModel>
+                    {
+                        Results = pushNotification,
+                        PageSize = result.PageSize,
+                        RowCount = result.TotalItemCount,
+                        CurrentPage = page,
+                        PageCount = result.PageCount
+                    };
+
+                    return pagedresult;
                 }
-                return new List<PushNotificationModel>();
+                return new PagedResult<PushNotificationModel>();
             }
             catch (Exception ex)
             {
