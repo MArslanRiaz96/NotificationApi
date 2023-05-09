@@ -11,10 +11,12 @@ namespace Customer.Model.Notifications
         public string Id { get; set; }
         public string Heading { get; set; }  = null!;
         public string Message { get; set; } = null!;
+        public string Body { get; set; } = null!;
         public string UserEmail { get; set; } = null!;
         public string RedirectUrl { get; set; }
         public bool IsSpecific { get; set; } = false;
         public string ProductId { get; set; } = null!;
+        public string GroupId { get; set; }
 
 
     }
