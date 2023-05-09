@@ -30,17 +30,8 @@ namespace Customer.Manager.Notifications
         {
             try
             {
-                if (string.IsNullOrEmpty(notificationId))
-                {
-                    var notification = await _context.Notifications.Where(x => x.UserEmail == UserEmail && x.ProductId == productId && x.IsSpecific == true && x.IsRead == false).OrderByDescending(x => x.CreatedOn).ToListAsync();
-                    return _mapper.Map<List<PushNotificationModel>>(notification);
-                }
-                else
-                {
-                    var notification = await _context.Notifications.Where(x => x.Id == notificationId && x.ProductId == productId && x.IsSpecific == true && x.IsRead == false).OrderByDescending(x => x.CreatedOn).SingleOrDefaultAsync();
-                    return _mapper.Map<List<PushNotificationModel>>(notification);
-                }
-
+                var notification = await _context.Notifications.Where(x => (string.IsNullOrEmpty(notificationId) || x.Id == notificationId) && x.UserEmail == UserEmail && x.ProductId == productId && x.IsSpecific == true && x.IsRead == false).OrderByDescending(x => x.CreatedOn).ToListAsync();
+                return _mapper.Map<List<PushNotificationModel>>(notification);
             }
             catch (Exception ex)
             {
@@ -54,7 +45,7 @@ namespace Customer.Manager.Notifications
             {
                 var notifications = await _context.Notifications
                     .Include(x => x.GroupNotifications)
-                    .Where(x => (string.IsNullOrEmpty(notificationId) || x.Id == notificationId) && (string.IsNullOrEmpty(groupId) || x.GroupId == groupId) && x.UserEmail == UserEmail && x.ProductId == productId && x.IsSpecific == false && !x.GroupNotifications.Any(x=> x.UserEmail == UserEmail && x.IsRead == true)).OrderByDescending(x => x.CreatedOn).ToListAsync();
+                    .Where(x => (string.IsNullOrEmpty(notificationId) || x.Id == notificationId) && (string.IsNullOrEmpty(groupId) || x.GroupId == groupId) && x.UserEmail == UserEmail && x.ProductId == productId && x.IsSpecific == false && !x.GroupNotifications.Any(x => x.UserEmail == UserEmail && x.IsRead == true)).OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 notifications.ForEach(x => x.IsRead = x.GroupNotifications.Any(z => z.IsRead));
 

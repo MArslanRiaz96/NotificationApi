@@ -57,7 +57,7 @@ namespace NotificationApi.HubService
         public async Task<PagedResult<PushNotificationModel>> GetReadGroupNotifications(string userEmail, string productId, int page, int pageSize = 10, string groupId = "")
         {
             var response = await _notificationManager.GetReadGroupNotifications(userEmail, productId, page, pageSize);
-            await Clients.Group(groupId).SendNotificationToClient(response.Results.ToList());
+            await Clients.Group(groupId).GetNotificaiton(response.Results.ToList());
             response.Results = new List<PushNotificationModel>();
             return response;
         }
@@ -75,7 +75,7 @@ namespace NotificationApi.HubService
         public async Task GetUnreadGroupNotifications(string userEmail, string productId, string groupId = "", string notificationId = "")
         {
             var response = await _notificationManager.GetUnreadGroupNotifications(userEmail, productId, groupId, notificationId);
-            await Clients.Group(groupId).SendNotificationToClient(response);
+            await Clients.Group(groupId).GetNotificaiton(response);
         }
         public async Task MarkNotificationRead(string userEmail, string productId, string notificationId = "")
         {
