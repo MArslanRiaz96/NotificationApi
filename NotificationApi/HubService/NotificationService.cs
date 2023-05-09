@@ -50,7 +50,15 @@ namespace NotificationApi.HubService
             {
                 await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(response.Results.ToList());
             }
-            response.Results = new List<PushNotificationModel>(); 
+            response.Results = new List<PushNotificationModel>();
+            return response;
+        }
+
+        public async Task<PagedResult<PushNotificationModel>> GetReadGroupNotifications(string userEmail, string productId, int page, int pageSize = 10, string groupId = "")
+        {
+            var response = await _notificationManager.GetReadGroupNotifications(userEmail, productId, page, pageSize);
+            await Clients.Group(groupId).SendNotificationToClient(response.Results.ToList());
+            response.Results = new List<PushNotificationModel>();
             return response;
         }
 
@@ -63,9 +71,19 @@ namespace NotificationApi.HubService
                 await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(response);
             }
         }
+
+        public async Task GetUnreadGroupNotifications(string userEmail, string productId, string groupId = "", string notificationId = "")
+        {
+            var response = await _notificationManager.GetUnreadGroupNotifications(userEmail, productId, groupId, notificationId);
+            await Clients.Group(groupId).SendNotificationToClient(response);
+        }
         public async Task MarkNotificationRead(string userEmail, string productId, string notificationId = "")
         {
             await _notificationManager.MarkNotificationRead(userEmail, productId, notificationId);
+        }
+        public async Task MarkGroupNotificationRead(string userEmail, string productId, string groupId = "", string notificationId = "")
+        {
+            await _notificationManager.MarkGroupNotificationRead(userEmail, productId, groupId, notificationId);
         }
 
         public async Task PushNotification(NotificationsModel model)
@@ -76,7 +94,7 @@ namespace NotificationApi.HubService
                 {
                     string notificationId = await _notificationManager.InsertNotification(model);
 
-                    var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
+                    var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId } };
                     await Clients.Group(model.ProductId).GetNotificaiton(notificationPush);
                 }
                 else
@@ -85,7 +103,7 @@ namespace NotificationApi.HubService
                     if (hubConnections?.Count() >= 1)
                     {
                         string notificationId = await _notificationManager.InsertNotification(model);
-                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId } };
+                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId } };
                         await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(notificationPush);
                     }
                 }

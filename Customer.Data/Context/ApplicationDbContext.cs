@@ -26,6 +26,7 @@ namespace Customer.Data.Context
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<HubConnection> HubConnections { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<GroupNotification> GroupNotifications { get; set; }
         public override int SaveChanges()
         {
             UpdateAuditableProperties();
