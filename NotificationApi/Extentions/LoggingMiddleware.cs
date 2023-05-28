@@ -47,9 +47,9 @@ namespace NotificationApi.Extentions
         }
         private async Task LoggingInSQL(Logging logging, HttpContext _context)
         {
-            var dbContext = _context.RequestServices.GetRequiredService<ApplicationDbContext>();
-            dbContext.Loggings.Add(logging);
-            await dbContext.SaveChangesAsync();
+            //var dbContext = _context.RequestServices.GetRequiredService<ApplicationDbContext>();
+            //dbContext.Loggings.Add(logging);
+            //await dbContext.SaveChangesAsync();
         }
     }
 }

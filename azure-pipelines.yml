@@ -1,0 +1,72 @@
+name: $(date:yyyyMMdd)$(rev:.r)_$(Build.SourceBranchName)
+pool:
+  vmImage: 'windows-latest'
+variables:
+- name: buildConfiguration
+  value: 'Release'
+- group: CommonBuild
+stages:
+- stage: Continuous_Integration
+  jobs:
+  - job: Build
+    steps:
+    - script: dotnet restore
+      displayName: restoring the packages
+      workingDirectory: NotificationApi
+
+    - script: dotnet build
+      displayName: building the application
+      workingDirectory: NotificationApi
+
+    - script: dotnet publish --configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true
+      displayName: publishing the project
+      workingDirectory: NotificationApi
+
+    - task: ArchiveFiles@2
+      inputs:
+         rootFolderOrFile: '$(build.artifactstagingdirectory)'
+         includeRootFolder: false
+         archiveType: 'zip'
+         archiveFile: '$(Build.ArtifactStagingDirectory)/NotificationAPI.zip'
+         replaceExistingArchive: true
+
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Artifact: drop"
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)/NotificationAPI.zip'
+        ArtifactName: 'drop'
+
+    - task: PowerShell@2
+      displayName: Mount File Share
+      condition: and(succeeded(), eq(variables['external-publish'], 'true'))
+      inputs:
+        targetType: inline
+        script: >-
+          # New Balance File Share
+
+          $connectTestResult = Test-NetConnection -ComputerName $(storage-name).file.core.windows.net -Port 445
+
+          if ($connectTestResult.TcpTestSucceeded) {
+              # Save the password so the drive will persist on reboot
+              cmd.exe /C "cmdkey /add:`"$(storage-name).file.core.windows.net`" /user:`"localhost\$(storage-name)`" /pass:`"$(storage-password)`""
+              # Mount the drive
+              New-PSDrive -Name B -PSProvider FileSystem -Root "\\$(storage-name).file.core.windows.net\$(file-share-name)" -Persist
+          } else {
+              Write-Error -Message "Unable to reach the Azure storage account via port 445. Check to make sure your organization or ISP is not blocking port 445, or use Azure P2S VPN, Azure S2S VPN, or Express Route to tunnel SMB traffic over a different port."
+          }
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: Storage Account'
+      condition: and(succeeded(), eq(variables['external-publish'], 'true'))
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)/NotificationAPI.zip'
+        ArtifactName: visionet
+        ArtifactType: FilePath
+        TargetPath: '\\$(storage-name).file.core.windows.net\$(file-share-name)\$(Build.DefinitionName)'
+        
+    - task: PowerShell@2
+      displayName: Unmount File Share
+      condition: and(succeeded(), eq(variables['external-publish'], 'true'))
+      inputs:
+        targetType: inline
+        script: 'net use B: /delete'

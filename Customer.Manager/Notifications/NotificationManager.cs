@@ -9,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -26,30 +28,49 @@ namespace Customer.Manager.Notifications
             _mapper = mapper;
         }
 
-        public async Task<List<PushNotificationModel>> GetUnreadNotifications(string UserEmail, string productId, string notificationId = "")
+        public async Task<PagedResult<PushNotificationModel>> GetUnreadNotifications(string UserEmail, string productId, string notificationId = "", int page = 1, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "")
         {
             try
             {
-                var notification = await _context.Notifications.Where(x => (string.IsNullOrEmpty(notificationId) || x.Id == notificationId) && x.UserEmail == UserEmail && x.ProductId == productId && x.IsSpecific == true && x.IsRead == false).OrderByDescending(x => x.CreatedOn).ToListAsync();
-                return _mapper.Map<List<PushNotificationModel>>(notification);
+                var result = await PaginationHelper.PaginateAsync(_context.Notifications.Where(x => (string.IsNullOrEmpty(tenantId) || x.TenantId == tenantId) && (string.IsNullOrEmpty(environmentId) || x.EnvironmentId == environmentId) && (string.IsNullOrEmpty(companyId) || x.CompanyId == companyId) && (string.IsNullOrEmpty(notificationId) || x.Id == notificationId) && x.UserEmail == UserEmail && x.ProductId == productId && x.IsSpecific == true && x.IsRead == false).OrderByDescending(x => x.CreatedOn).AsQueryable(), page, pageSize);
+                var pushNotifications = _mapper.Map<List<PushNotificationModel>>(result);
+                var pagedresult = new PagedResult<PushNotificationModel>
+                {
+                    Results = pushNotifications,
+                    PageSize = result.PageSize,
+                    RowCount = result.TotalItemCount,
+                    CurrentPage = page,
+                    PageCount = result.PageCount
+                };
+
+                return pagedresult;
             }
             catch (Exception ex)
             {
                 throw;
             }
         }
-
-        public async Task<List<PushNotificationModel>> GetUnreadGroupNotifications(string UserEmail, string productId, string groupId = "", string notificationId = "")
+        public async Task<PagedResult<PushNotificationModel>> GetUnreadGroupNotifications(string UserEmail, string productId, string groupId = "", string notificationId = "", int page = 1, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "")
         {
             try
             {
-                var notifications = await _context.Notifications
-                    .Include(x => x.GroupNotifications)
-                    .Where(x => (string.IsNullOrEmpty(notificationId) || x.Id == notificationId) && (string.IsNullOrEmpty(groupId) || x.GroupId == groupId) && x.UserEmail == UserEmail && x.ProductId == productId && x.IsSpecific == false && !x.GroupNotifications.Any(x => x.UserEmail == UserEmail && x.IsRead == true)).OrderByDescending(x => x.CreatedOn).ToListAsync();
+                var result = await PaginationHelper.PaginateAsync(_context.Notifications
+                .Include(x => x.GroupNotifications.Where(x => x.UserEmail == UserEmail && x.IsRead == true))
+                    .Where(x => (string.IsNullOrEmpty(tenantId) || x.TenantId == tenantId) && (string.IsNullOrEmpty(environmentId) || x.EnvironmentId == environmentId) && (string.IsNullOrEmpty(companyId) || x.CompanyId == companyId) && (string.IsNullOrEmpty(notificationId) || x.Id == notificationId) && (string.IsNullOrEmpty(groupId) || x.GroupId == groupId) && x.ProductId == productId && x.IsSpecific == false && !x.GroupNotifications.Any(x => x.UserEmail == UserEmail && x.IsRead == true)).OrderByDescending(x => x.CreatedOn).AsQueryable(), page, pageSize);
 
-                notifications.ForEach(x => x.IsRead = x.GroupNotifications.Any(z => z.IsRead));
+                result.ForEach(x => { x.IsRead = x.GroupNotifications.Any(z => z.IsRead); x.UserEmail = UserEmail; });
+                var pushNotifications = _mapper.Map<List<PushNotificationModel>>(result);
 
-                return _mapper.Map<List<PushNotificationModel>>(notifications);
+                var pagedresult = new PagedResult<PushNotificationModel>
+                {
+                    Results = pushNotifications,
+                    PageSize = result.PageSize,
+                    RowCount = result.TotalItemCount,
+                    CurrentPage = page,
+                    PageCount = result.PageCount
+                };
+
+                return pagedresult;
 
             }
             catch (Exception ex)
@@ -57,17 +78,13 @@ namespace Customer.Manager.Notifications
                 throw;
             }
         }
-        public async Task<PagedResult<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize)
+        public async Task<PagedResult<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize, string tenantId = "", string environmentId = "", string companyId = "")
         {
             try
             {
                 if (!string.IsNullOrEmpty(userEmail) && !string.IsNullOrEmpty(productId))
                 {
-                    var result = await PaginationHelper.PaginateAsync(_context.Notifications.Where(x => x.UserEmail == userEmail && x.IsRead == true).OrderByDescending(x => x.CreatedOn).AsQueryable(), page, pageSize);
-                    var test = result.TotalItemCount;
-                    var test2 = result.HasPreviousPage;
-                    var test3 = result.HasNextPage;
-                    var test4 = result.IsLastPage;
+                    var result = await PaginationHelper.PaginateAsync(_context.Notifications.Where(x => (string.IsNullOrEmpty(tenantId) || x.TenantId == tenantId) && (string.IsNullOrEmpty(environmentId) || x.EnvironmentId == environmentId) && (string.IsNullOrEmpty(companyId) || x.CompanyId == companyId) && x.ProductId == productId && x.IsSpecific == true && x.UserEmail == userEmail && x.IsRead == true).OrderByDescending(x => x.CreatedOn).AsQueryable(), page, pageSize);
                     var pushNotification = _mapper.Map<List<PushNotificationModel>>(result);
                     var pagedresult = new PagedResult<PushNotificationModel>
                     {
@@ -88,22 +105,17 @@ namespace Customer.Manager.Notifications
             }
         }
 
-        public async Task<PagedResult<PushNotificationModel>> GetReadGroupNotifications(string userEmail, string productId, int page, int pageSize, string groupId = "")
+        public async Task<PagedResult<PushNotificationModel>> GetAllNotifications(string userEmail, string productId, int page, int pageSize, string tenantId = "", string environmentId = "", string companyId = "")
         {
             try
             {
-
                 if (!string.IsNullOrEmpty(userEmail) && !string.IsNullOrEmpty(productId))
                 {
-                    var result = await PaginationHelper.PaginateAsync(_context.Notifications
-                    .Include(x => x.GroupNotifications)
-                    .Where(x => (string.IsNullOrEmpty(groupId) || x.GroupId == groupId) && x.UserEmail == userEmail && x.ProductId == productId && x.IsSpecific == false && x.IsRead == false && x.GroupNotifications.Any(z => z.UserEmail == userEmail && z.IsRead == true)).OrderByDescending(x => x.CreatedOn).AsQueryable(), page, pageSize);
-
-                    result.ForEach(x => x.IsRead = x.GroupNotifications.Any(z => z.IsRead));
-                    var pushNotifications = _mapper.Map<List<PushNotificationModel>>(result);
+                    var result = await PaginationHelper.PaginateAsync(_context.Notifications.Where(x => (string.IsNullOrEmpty(tenantId) || x.TenantId == tenantId) && (string.IsNullOrEmpty(environmentId) || x.EnvironmentId == environmentId) && (string.IsNullOrEmpty(companyId) || x.CompanyId == companyId) && x.ProductId == productId && x.IsSpecific == true && x.UserEmail == userEmail).OrderByDescending(x => x.CreatedOn).AsQueryable(), page, pageSize);
+                    var pushNotification = _mapper.Map<List<PushNotificationModel>>(result);
                     var pagedresult = new PagedResult<PushNotificationModel>
                     {
-                        Results = pushNotifications,
+                        Results = pushNotification,
                         PageSize = result.PageSize,
                         RowCount = result.TotalItemCount,
                         CurrentPage = page,
@@ -120,9 +132,136 @@ namespace Customer.Manager.Notifications
             }
         }
 
-        public async Task<List<HubConnection>> GetUserConnections(string UserName, string productId)
+        public async Task<PagedResult<PushNotificationModel>> GetReadGroupNotifications(string userEmail, string productId, int page, int pageSize, string groupId = "", string tenantId = "", string environmentId = "", string companyId = "")
         {
-            return await _context.HubConnections.Where(con => con.Username == UserName && con.ProductId == productId).ToListAsync();
+            try
+            {
+                if (string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(productId))
+                {
+                    return new PagedResult<PushNotificationModel>();
+                }
+
+                var query = _context.Notifications
+                    .Include(x => x.GroupNotifications.Where(g => g.UserEmail == userEmail && g.IsRead))
+                    .Where(x => x.ProductId == productId && !x.IsSpecific)
+                    .Where(x => (string.IsNullOrEmpty(tenantId) || x.TenantId == tenantId) && (string.IsNullOrEmpty(environmentId) || x.EnvironmentId == environmentId) && (string.IsNullOrEmpty(companyId) || x.CompanyId == companyId) && (string.IsNullOrEmpty(groupId) || x.GroupId == groupId))
+                    .Where(x => x.GroupNotifications.Any(g => g.UserEmail == userEmail && g.IsRead))
+                    .OrderByDescending(x => x.CreatedOn);
+
+                var result = await PaginationHelper.PaginateAsync(query, page, pageSize);
+                result.ForEach(x => { x.IsRead = x.GroupNotifications.Any(z => z.IsRead); x.UserEmail = userEmail; });
+                var pushNotifications = _mapper.Map<List<PushNotificationModel>>(result);
+                var pagedResult = new PagedResult<PushNotificationModel>
+                {
+                    Results = pushNotifications,
+                    PageSize = result.PageSize,
+                    RowCount = result.TotalItemCount,
+                    CurrentPage = page,
+                    PageCount = result.PageCount
+                };
+
+                return pagedResult;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<PagedResult<PushNotificationModel>> GetAllGroupNotifications(string userEmail, string productId, int page, int pageSize, string groupId = "", string tenantId = "", string environmentId = "", string companyId = "")
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(productId))
+                {
+                    return new PagedResult<PushNotificationModel>();
+                }
+
+                var query = _context.Notifications
+                    .Include(x => x.GroupNotifications.Where(g => g.UserEmail == userEmail && g.IsRead))
+                    .Where(x => x.ProductId == productId && !x.IsSpecific)
+                    .Where(x => (string.IsNullOrEmpty(tenantId) || x.TenantId == tenantId) && (string.IsNullOrEmpty(environmentId) || x.EnvironmentId == environmentId) && (string.IsNullOrEmpty(companyId) || x.CompanyId == companyId) && (string.IsNullOrEmpty(groupId) || x.GroupId == groupId))
+                    .OrderByDescending(x => x.CreatedOn);
+
+                var result = await PaginationHelper.PaginateAsync(query, page, pageSize);
+                result.ForEach(x => { x.IsRead = x.GroupNotifications.Any(z => z.IsRead); x.UserEmail = userEmail; });
+                var pushNotifications = _mapper.Map<List<PushNotificationModel>>(result);
+                var pagedResult = new PagedResult<PushNotificationModel>
+                {
+                    Results = pushNotifications,
+                    PageSize = result.PageSize,
+                    RowCount = result.TotalItemCount,
+                    CurrentPage = page,
+                    PageCount = result.PageCount
+                };
+
+                return pagedResult;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<PagedResult<PushNotificationModel>> GetAllTypeNotifications(string userEmail, string productId, int page, int pageSize, string groupId = "", string tenantId = "", string environmentId = "", string companyId = "")
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(productId))
+                {
+                    return new PagedResult<PushNotificationModel>();
+                }
+
+                var specificNotificationsQuery = _context.Notifications
+                    .Where(x => (string.IsNullOrEmpty(tenantId) || x.TenantId == tenantId) && (string.IsNullOrEmpty(environmentId) || x.EnvironmentId == environmentId) && (string.IsNullOrEmpty(companyId) || x.CompanyId == companyId) && x.ProductId == productId && x.IsSpecific && x.UserEmail == userEmail)
+                    .OrderByDescending(x => x.CreatedOn);
+
+                var groupNotificationsQuery = _context.Notifications
+                    .Where(x => x.ProductId == productId && !x.IsSpecific)
+                    .Where(x => (string.IsNullOrEmpty(tenantId) || x.TenantId == tenantId) && (string.IsNullOrEmpty(environmentId) || x.EnvironmentId == environmentId) && (string.IsNullOrEmpty(companyId) || x.CompanyId == companyId) && (string.IsNullOrEmpty(groupId) || x.GroupId == groupId))
+                    .OrderByDescending(x => x.CreatedOn);
+
+                
+
+                var combinedQuery = specificNotificationsQuery.Union(groupNotificationsQuery);
+
+                var result = await PaginationHelper.PaginateAsync(combinedQuery.AsQueryable(), page, pageSize);
+
+                var notificationIds = result.Where(x => !x.IsSpecific).Select(x => x.Id).ToList();
+
+                var groupNotifications = _context.GroupNotifications
+                .Where(z => z.IsRead && notificationIds.Contains(z.NotificationId) && z.UserEmail == userEmail)
+                .GroupBy(z => z.NotificationId)
+                .Select(g => g.FirstOrDefault())
+                .ToList();
+
+                result.Where(x => !x.IsSpecific).ToList().ForEach(x =>
+                {
+                    x.IsRead = groupNotifications.Any(z => z.NotificationId == x.Id);
+                    x.UserEmail = userEmail;
+                });
+
+                var pushNotifications = _mapper.Map<List<PushNotificationModel>>(result);
+                var pagedResult = new PagedResult<PushNotificationModel>
+                {
+                    Results = pushNotifications,
+                    PageSize = result.PageSize,
+                    RowCount = result.TotalItemCount,
+                    CurrentPage = page,
+                    PageCount = result.PageCount
+                };
+
+                return pagedResult;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<HubConnection>> GetUserConnections(string UserName, string productId, string tenantId = "", string environmentId = "", string companyId = "")
+        {
+            return await _context.HubConnections.Where(con => con.Username == UserName && con.ProductId == productId && (string.IsNullOrEmpty(tenantId) || con.TenantId == tenantId) && (string.IsNullOrEmpty(companyId) || con.CompanyId == companyId)).ToListAsync();
         }
 
         public async Task<string> InsertNotification(NotificationsModel notification)
@@ -133,7 +272,7 @@ namespace Customer.Manager.Notifications
                 var notifications = _mapper.Map<Notification>(notification);
 
                 notifications.Id = Guid.NewGuid().ToString();
-                notifications.CreatedOn = DateTime.Now;
+                notifications.CreatedOn = DateTime.UtcNow;
                 _context.Notifications.Add(notifications);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -146,13 +285,13 @@ namespace Customer.Manager.Notifications
             }
         }
 
-        public async Task MarkNotificationRead(string userEmail, string productId, string notificationId = "")
+        public async Task MarkNotificationRead(string userEmail, string productId, string notificationId = "", string tenantId = "", string environmentId = "", string companyId = "")
         {
             var transaction = _context.Database.BeginTransaction();
             try
             {
-                List<PushNotificationModel> pushNotifications = await GetUnreadNotifications(userEmail, productId, notificationId);
-                var notifications = _mapper.Map<List<Notification>>(pushNotifications);
+                PagedResult<PushNotificationModel> pushNotifications = await GetUnreadNotifications(userEmail, productId, notificationId, 1,1000, tenantId,environmentId , companyId);
+                var notifications = _mapper.Map<List<Notification>>(pushNotifications?.Results);
 
                 if (notifications != null && notifications.Count > 0)
                 {
@@ -178,10 +317,10 @@ namespace Customer.Manager.Notifications
             }
         }
 
-        public async Task MarkGroupNotificationRead(string userEmail, string productId, string groupId = "", string notificationId = "")
+        public async Task MarkGroupNotificationRead(string userEmail, string productId, string groupId = "", string notificationId = "", string tenantId = "", string environmentId = "", string companyId = "")
         {
-            List<PushNotificationModel> pushNotifications = await GetUnreadGroupNotifications(userEmail, productId, groupId, notificationId);
-            var notifications = _mapper.Map<List<Notification>>(pushNotifications);
+            PagedResult<PushNotificationModel> pushNotifications = await GetUnreadGroupNotifications(userEmail, productId, groupId, notificationId,1, 1000, tenantId,environmentId, companyId);
+            var notifications = _mapper.Map<List<Notification>>(pushNotifications?.Results);
 
             if (notifications.Any())
             {

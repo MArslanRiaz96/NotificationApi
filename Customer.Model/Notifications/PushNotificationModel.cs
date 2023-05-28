@@ -19,5 +19,8 @@ namespace Customer.Model.Notifications
         public string GroupId { get; set; } 
         public bool IsRead { get; set; } = false;
         public string CreatedOn { get; set; }
+        public string TenantId { get; set; }
+        public string EnvironmentId { get; set; }
+        public string CompanyId { get; set; }
     }
 }

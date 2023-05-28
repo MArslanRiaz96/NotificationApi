@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Customer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230430111554_soft-delete-notification")]
-    partial class softdeletenotification
+    [Migration("20230519114531_AddDataInNotificationProduct")]
+    partial class AddDataInNotificationProduct
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,21 +25,59 @@ namespace Customer.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Customer.Data.Models.GroupNotification", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NotificationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("GroupNotifications");
+                });
+
             modelBuilder.Entity("Customer.Data.Models.HubConnection", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CompanyId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConnectionId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnvironmentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -52,63 +90,29 @@ namespace Customer.Data.Migrations
                     b.ToTable("HubConnections");
                 });
 
-            modelBuilder.Entity("Customer.Data.Models.Logging", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ActionDetail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("App_Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Application_Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ComapnyId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Request_By")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Request_Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Request_Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tenant_Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Loggings");
-                });
-
             modelBuilder.Entity("Customer.Data.Models.Notification", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnvironmentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GroupId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Heading")
                         .IsRequired()
@@ -120,6 +124,9 @@ namespace Customer.Data.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsSpecific")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -129,6 +136,10 @@ namespace Customer.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RedirectUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TenantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -171,7 +182,40 @@ namespace Customer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("NotificationProducts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "11db7c7d-2ddb-49b6-9c40-ff4dc23a7730",
+                            CreatedBy = "arslan",
+                            CreatedOn = new DateTime(2023, 5, 19, 11, 45, 31, 167, DateTimeKind.Utc).AddTicks(703),
+                            IsActive = true,
+                            ModifiedBy = "arslan",
+                            ModifiedOn = new DateTime(2023, 5, 19, 11, 45, 31, 167, DateTimeKind.Utc).AddTicks(706),
+                            Name = "PartnerLinq US"
+                        },
+                        new
+                        {
+                            Id = "56730618-A053-4605-BFA0-42DC6CBE0CF7",
+                            CreatedBy = "arslan",
+                            CreatedOn = new DateTime(2023, 5, 19, 11, 45, 31, 167, DateTimeKind.Utc).AddTicks(736),
+                            IsActive = true,
+                            ModifiedBy = "arslan",
+                            ModifiedOn = new DateTime(2023, 5, 19, 11, 45, 31, 167, DateTimeKind.Utc).AddTicks(736),
+                            Name = "Data Fabric"
+                        });
+                });
+
+            modelBuilder.Entity("Customer.Data.Models.GroupNotification", b =>
+                {
+                    b.HasOne("Customer.Data.Models.Notification", "Notifications")
+                        .WithMany("GroupNotifications")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notifications");
                 });
 
             modelBuilder.Entity("Customer.Data.Models.HubConnection", b =>
@@ -194,6 +238,11 @@ namespace Customer.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Customer.Data.Models.Notification", b =>
+                {
+                    b.Navigation("GroupNotifications");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,12 +12,15 @@ namespace Customer.Manager.Notifications
     public interface INotificationManager
     {
         public Task<string> InsertNotification(NotificationsModel notification);
-        public Task<List<HubConnection>> GetUserConnections(string UserName, string productId);
-        Task<List<PushNotificationModel>> GetUnreadNotifications(string userEmail, string productId, string notificationId = "");
-        Task<List<PushNotificationModel>> GetUnreadGroupNotifications(string userEmail, string productId, string groupId = "", string notificationId = "");
-        Task<PagedResult<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize = 10);
-        Task<PagedResult<PushNotificationModel>> GetReadGroupNotifications(string userEmail, string productId, int page, int pageSize = 10, string groupId = "");
-        public Task MarkNotificationRead(string userEmail, string productId, string notificationId = "");
-        public Task MarkGroupNotificationRead(string userEmail, string productId, string groupId = "", string notificationId = "");
+        public Task<List<HubConnection>> GetUserConnections(string UserName, string productId, string tenantId = "", string environmentId = "", string companyId = "");
+        Task<PagedResult<PushNotificationModel>> GetUnreadNotifications(string userEmail, string productId, string notificationId = "", int page = 1, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "");
+        Task<PagedResult<PushNotificationModel>> GetUnreadGroupNotifications(string userEmail, string productId, string groupId = "", string notificationId = "", int page = 1, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "");
+        Task<PagedResult<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "");
+        Task<PagedResult<PushNotificationModel>> GetAllNotifications(string userEmail, string productId, int page, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "");
+        Task<PagedResult<PushNotificationModel>> GetReadGroupNotifications(string userEmail, string productId, int page, int pageSize = 10, string groupId = "", string tenantId = "", string environmentId = "", string companyId = "");
+        Task<PagedResult<PushNotificationModel>> GetAllGroupNotifications(string userEmail, string productId, int page, int pageSize = 10, string groupId = "", string tenantId = "", string environmentId = "", string companyId = "");
+        Task<PagedResult<PushNotificationModel>> GetAllTypeNotifications(string userEmail, string productId, int page, int pageSize = 10, string groupId = "", string tenantId = "", string environmentId = "", string companyId = "");
+        public Task MarkNotificationRead(string userEmail, string productId, string notificationId = "", string tenantId = "", string environmentId = "", string companyId = "");
+        public Task MarkGroupNotificationRead(string userEmail, string productId, string groupId = "", string notificationId = "", string tenantId = "", string environmentId = "", string companyId = "");
     }
 }

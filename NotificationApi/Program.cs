@@ -1,7 +1,9 @@
 using Customer.Data;
+using Customer.Data.Context;
 using Customer.Manager;
 using Customer.Model;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,12 +20,29 @@ IWebHostEnvironment environment = builder.Environment;
 builder.Services.AddDataInfrastructure(builder.Configuration);
 builder.Services.AddModelLayer(builder.Configuration);
 builder.Services.AddBusinessLayer(builder.Configuration);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy" ,builder =>
+    {
+                 builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .SetIsOriginAllowed((host) => true)
+                .WithOrigins(configuration.GetSection("WhiteListOrigins").GetChildren().Select(x => x.Value).ToArray())
+               ;
+    });
+});
 builder.Services.AddSignalR();
 builder.Services.AddScoped<NotificationHub>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 //builder.Services.AddMvc(options =>
 //{
 //    options.Filters.Add(typeof(ValidateModelStateAttribute));
@@ -47,13 +66,17 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction() || app.Env
 app.UseCustomExceptionHandler();
 
 app.UseHttpsRedirection();
-app.UseCors(builder2 => builder2
-                               .WithOrigins(builder.Configuration.GetSection("WhiteListOrigins").GetChildren().Select(x => x.Value).ToArray())
-                               .AllowAnyHeader()
-                               .AllowAnyMethod()
-                               .AllowCredentials()
-                       );
+app.UseRouting();
+
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    dbContext.Database.SetCommandTimeout(3600);
+    dbContext.Database.Migrate();
+}
 app.MapHub<NotificationHub>("/notification");
 app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();

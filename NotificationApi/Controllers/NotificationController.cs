@@ -30,25 +30,25 @@ namespace NotificationApi.Controllers
 
             try
             {
-                if (!string.IsNullOrEmpty(model.Heading) && !string.IsNullOrEmpty(model.Message) && !string.IsNullOrEmpty(model.UserEmail) && !string.IsNullOrEmpty(model.ProductId))
+                if (!string.IsNullOrEmpty(model.Heading) && !string.IsNullOrEmpty(model.Message) && !string.IsNullOrEmpty(model.ProductId))
                 {
                     if (!model.IsSpecific)
                     {
                         string notificationId = await _notificationManager.InsertNotification(model);
 
-                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId , GroupId = model.GroupId} };
-                        await _hubContext.Clients.All.GetNotificaiton(notificationPush);
+                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId , GroupId = model.GroupId, IsSpecific = model.IsSpecific, TenantId = model.TenantId, EnvironmentId = model.EnvironmentId, CompanyId = model.CompanyId} };
+                        await _hubContext.Clients.Group(model.EnvironmentId).GetNotificaiton(notificationPush);
 
                         retMessage = "Success";
                     }
                     else
                     {
-                        var hubConnections = await _notificationManager.GetUserConnections(model.UserEmail,model.ProductId);
+                        var hubConnections = await _notificationManager.GetUserConnections(model.UserEmail, model.ProductId, model.TenantId, model.EnvironmentId, model.CompanyId);
                         if (hubConnections?.Count() >= 1)
                         {
                             string notificationId = await _notificationManager.InsertNotification(model);
-                            var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString(), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId } };
-                            await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(notificationPush);
+                            var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId, IsSpecific = model.IsSpecific, TenantId = model.TenantId,EnvironmentId = model.EnvironmentId, CompanyId = model.CompanyId } };
+                            await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).GetNotificaiton(notificationPush);
                         }
                         retMessage = "Success";
                     }

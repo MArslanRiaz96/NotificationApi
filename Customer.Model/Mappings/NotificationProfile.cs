@@ -15,7 +15,7 @@ namespace Customer.Model.Mappings
         {
             CreateMap<Notification, NotificationsModel>();
             CreateMap<NotificationsModel, Notification>();
-            CreateMap<PushNotificationModel, Notification>().ReverseMap();
+            CreateMap<PushNotificationModel, Notification>().ReverseMap().ForMember(src => src.CreatedOn, options => options.MapFrom(dest => dest.CreatedOn.ToString("MM/dd/yyyy h:mm tt")));
         }
     }
 }
