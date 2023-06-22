@@ -37,11 +37,11 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSignalR(hubOptions => {
     hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(25);
-    hubOptions.MaximumReceiveMessageSize = 65_536;
-    hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(15);
-    hubOptions.MaximumParallelInvocationsPerClient = 2;
+   // hubOptions.MaximumReceiveMessageSize = 65_536;
+   // hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(15);
+   // hubOptions.MaximumParallelInvocationsPerClient = 2;
     hubOptions.EnableDetailedErrors = true;
-    hubOptions.StreamBufferCapacity = 15;
+    //hubOptions.StreamBufferCapacity = 15;
 
     if (hubOptions?.SupportedProtocols is not null)
     {
