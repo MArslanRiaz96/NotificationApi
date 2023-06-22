@@ -50,16 +50,16 @@ builder.Services.AddCors(options =>
 //    }
 //});
 
-            builder.Services.AddSignalR(hubOptions =>
-            {
-                hubOptions.EnableDetailedErrors = true;
-                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(10);
-                hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(20);
-            })
-                .AddJsonProtocol(options =>
-                {
-                    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
-                });
+builder.Services.AddSignalR(hubOptions =>
+{
+    hubOptions.EnableDetailedErrors = true;
+    hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(3);
+    hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(6);
+});
+                //.AddJsonProtocol(options =>
+                //{
+                //    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+                //});
 
 builder.Logging.AddFilter("Microsoft.AspNetCore.SignalR", LogLevel.Debug);
 builder.Logging.AddFilter("Microsoft.AspNetCore.Http.Connections", LogLevel.Debug);
