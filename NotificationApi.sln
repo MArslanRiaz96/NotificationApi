@@ -5,11 +5,11 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationApi", "NotificationApi\NotificationApi.csproj", "{A4A77F5D-4D55-4FF8-9B48-35C7E0859007}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Customer.Data", "Customer.Data\Customer.Data.csproj", "{EB7C9708-A6E4-4D64-ABEF-CD474975EAEF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Data", "Customer.Data\Customer.Data.csproj", "{EB7C9708-A6E4-4D64-ABEF-CD474975EAEF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Customer.Model", "Customer.Model\Customer.Model.csproj", "{A1974F44-6950-4F64-AD30-6AE877E511B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Model", "Customer.Model\Customer.Model.csproj", "{A1974F44-6950-4F64-AD30-6AE877E511B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Customer.Manager", "Customer.Manager\Customer.Manager.csproj", "{91D1882F-928A-43B4-ADE4-FD0DE17BD9F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Manager", "Customer.Manager\Customer.Manager.csproj", "{91D1882F-928A-43B4-ADE4-FD0DE17BD9F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

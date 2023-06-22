@@ -4,6 +4,7 @@ using Customer.Manager;
 using Customer.Model;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,20 @@ builder.Services.AddCors(options =>
                ;
     });
 });
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(hubOptions => {
+    hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(25);
+    hubOptions.MaximumReceiveMessageSize = 65_536;
+    hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(15);
+    hubOptions.MaximumParallelInvocationsPerClient = 2;
+    hubOptions.EnableDetailedErrors = true;
+    hubOptions.StreamBufferCapacity = 15;
+
+    if (hubOptions?.SupportedProtocols is not null)
+    {
+        foreach (var protocol in hubOptions.SupportedProtocols)
+            Console.WriteLine($"SignalR supports {protocol} protocol.");
+    }
+});
 builder.Services.AddScoped<NotificationHub>();
 
 builder.Services.AddControllers();
@@ -77,7 +91,21 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.SetCommandTimeout(3600);
     dbContext.Database.Migrate();
 }
-app.MapHub<NotificationHub>("/notification");
+app.MapHub<NotificationHub>("/notification", options =>
+{
+    options.Transports =
+                HttpTransportType.WebSockets |
+                HttpTransportType.LongPolling;
+   // options.CloseOnAuthenticationExpiration = true;
+    options.ApplicationMaxBufferSize = 65_536;
+    options.TransportMaxBufferSize = 65_536;
+    options.MinimumProtocolVersion = 0;
+    options.TransportSendTimeout = TimeSpan.FromMinutes(25);
+    options.WebSockets.CloseTimeout = TimeSpan.FromMinutes(25);
+    options.LongPolling.PollTimeout = TimeSpan.FromMinutes(25);
+    //Console
+    //.WriteLine($"Authorization data items: {options.AuthorizationData.Count}");
+});
 app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 

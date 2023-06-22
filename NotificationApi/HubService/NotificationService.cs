@@ -3,6 +3,7 @@ using Customer.Data.Models;
 using Customer.Manager.Notifications;
 using Customer.Model.Common;
 using Customer.Model.Notifications;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
@@ -46,10 +47,10 @@ namespace NotificationApi.HubService
                 throw;
             }
         }
-        public async Task<PagedResult<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "")
+        public async Task<PagedResult<PushNotificationModel>> GetReadNotifications(string UserEmail, string productId, string notificationId = "", int page = 1, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "")
         {
-            var response = await _notificationManager.GetReadNotifications(userEmail, productId, page, pageSize, tenantId, environmentId, companyId);
-            var hubConnections = await _notificationManager.GetUserConnections(userEmail, productId, tenantId, environmentId, companyId);
+            var response = await _notificationManager.GetReadNotifications(UserEmail, productId, notificationId, page, pageSize, tenantId, environmentId, companyId);
+            var hubConnections = await _notificationManager.GetUserConnections(UserEmail, productId, tenantId, environmentId, companyId);
             if (hubConnections?.Count() >= 1)
             {
                 await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).SendNotificationToClient(response.Results.ToList());
@@ -133,9 +134,14 @@ namespace NotificationApi.HubService
         {
             await _notificationManager.MarkNotificationRead(userEmail, productId, notificationId, tenantId, environmentId, companyId);
         }
-        public async Task MarkGroupNotificationRead(string userEmail, string productId, string groupId = "", string notificationId = "", string tenantId = "",string environmentId = "", string companyId = "")
+        public async Task MarkGroupNotificationRead(string userEmail, string productId, string groupId = "", string notificationId = "", string tenantId = "", string environmentId = "", string companyId = "")
         {
             await _notificationManager.MarkGroupNotificationRead(userEmail, productId, groupId, notificationId, tenantId, environmentId, companyId);
+        }
+
+        public async Task MarkNotificationUnRead(string userEmail, string productId, string groupId = "", string notificationId = "", string tenantId = "", string environmentId = "", string companyId = "")
+        {
+            await _notificationManager.MarkNotificationUnRead(userEmail, productId, groupId, notificationId, tenantId, environmentId, companyId);
         }
 
         public async Task PushNotification(NotificationsModel model)
@@ -146,7 +152,7 @@ namespace NotificationApi.HubService
                 {
                     string notificationId = await _notificationManager.InsertNotification(model);
 
-                    var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId,IsSpecific = model.IsSpecific, TenantId = model.TenantId, EnvironmentId = model.EnvironmentId, CompanyId = model.CompanyId } };
+                    var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, Bodysize = model.Bodysize, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId,IsSpecific = model.IsSpecific, TenantId = model.TenantId, EnvironmentId = model.EnvironmentId, CompanyId = model.CompanyId } };
                     await Clients.Group(model.EnvironmentId).GetNotificaiton(notificationPush);
                 }
                 else
@@ -155,8 +161,56 @@ namespace NotificationApi.HubService
                     if (hubConnections?.Count() >= 1)
                     {
                         string notificationId = await _notificationManager.InsertNotification(model);
-                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId, IsSpecific = model.IsSpecific, TenantId = model.TenantId, EnvironmentId = model.EnvironmentId , CompanyId = model.CompanyId } };
+                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, Bodysize = model.Bodysize, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId, IsSpecific = model.IsSpecific, TenantId = model.TenantId, EnvironmentId = model.EnvironmentId , CompanyId = model.CompanyId } };
                         await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).GetNotificaiton(notificationPush);
+                    }
+                }
+            }
+        }
+
+        public async Task PublishGlobalEnviromentNotification(NotificationsModel model)
+        {
+            if (!string.IsNullOrEmpty(model.Heading) && !string.IsNullOrEmpty(model.Message) && !string.IsNullOrEmpty(model.ProductId) && !string.IsNullOrEmpty(model.AppUrl) && !model.IsSpecific)
+            {
+                var subEnviroments = await _notificationManager.GetEnvironmentsByProduct(model.ProductId, model.AppUrl);
+
+                if (subEnviroments.Count > 0)
+                {
+                    foreach (var subEnv in subEnviroments)
+                    {
+                        foreach (var company in subEnv.Companies)
+                        {
+                            model.GroupId = subEnv.Environment.Id;
+                            model.CompanyId = company.CompanyId.ToString();
+                            model.EnvironmentId = subEnv.Environment.Id;
+                            model.TenantId = subEnv.Environment.TenantId;
+
+                            string notificationId = await _notificationManager.InsertNotification(model);
+                            if (!string.IsNullOrEmpty(notificationId))
+                            {
+                                var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel
+                                    {
+                                        Heading = model.Heading,
+                                        Message = model.Message,
+                                        Body = model.Body,
+                                        UserEmail = model.UserEmail,
+                                        RedirectUrl = model.RedirectUrl,
+                                        CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"),
+                                        Id = notificationId,
+                                        IsRead = false,
+                                        ProductId = model.ProductId,
+                                        GroupId = model.GroupId,
+                                        IsSpecific = model.IsSpecific,
+                                        TenantId = model.TenantId,
+                                        EnvironmentId = model.EnvironmentId,
+                                        Bodysize = model.Bodysize,
+                                        CompanyId = model.CompanyId
+                                    }
+
+                                };
+                                await Clients.Group(subEnv.Environment.Id + company.CompanyId).GetNotificaiton(notificationPush);
+                            }
+                        }
                     }
                 }
             }
@@ -175,6 +229,8 @@ namespace NotificationApi.HubService
                 _dbContext.SaveChangesAsync();
 
                 await RemoveFromGroup(hubConnection?.ProductId);
+                await RemoveFromGroup(hubConnection?.EnvironmentId);
+                await RemoveFromGroup(hubConnection?.EnvironmentId + hubConnection?.CompanyId);
             }
             return base.OnDisconnectedAsync(exception);
         }

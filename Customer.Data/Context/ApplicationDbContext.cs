@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Customer.Data.Extentions;
 using Customer.Data.Models;
 using System.Data.Common;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Customer.Data.Context
 {
@@ -27,6 +28,9 @@ namespace Customer.Data.Context
         public DbSet<HubConnection> HubConnections { get; set; }
         public DbSet<Product> NotificationProducts { get; set; }
         public DbSet<GroupNotification> GroupNotifications { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<TenantEnvironment> Environments { get; set; }
         public override int SaveChanges()
         {
             UpdateAuditableProperties();
@@ -45,31 +49,31 @@ namespace Customer.Data.Context
                 }
             }
 
-           // builder.Entity<Lookup>()
-           //     .HasIndex(u => u.Value)
-           //     .IsUnique();
+            // builder.Entity<Lookup>()
+            //     .HasIndex(u => u.Value)
+            //     .IsUnique();
 
-           // builder.Entity<Media>()
-           // .Property(e => e.PrincipalName)
-           //.HasConversion(
-           //    v => v.ToString(),
-           //    v => (PrincipalTables)Enum.Parse(typeof(PrincipalTables), v));
+            // builder.Entity<Media>()
+            // .Property(e => e.PrincipalName)
+            //.HasConversion(
+            //    v => v.ToString(),
+            //    v => (PrincipalTables)Enum.Parse(typeof(PrincipalTables), v));
 
-           // builder.Entity<Models.Customer>()
-           //     .HasIndex(c => c.Code)
-           //     .IsUnique(true);
-           // builder.Entity<Process>()
-           //     .HasIndex(p => new { p.Code, p.Direction, p.EdiVersion, p.PartnerId })
-           //     .IsUnique(true);
-           // builder.Entity<Partner>()
-           //     .HasIndex(p => new { p.CompanyId, p.Code })
-           //     .IsUnique(true);
-           // builder.Entity<Company>()
-           // .HasIndex(p => new { p.SubscriptionId, p.Code })
-           // .IsUnique(true);
-           // builder.Entity<Subscription>()
-           // .HasIndex(p => new { p.CustomerId, p.ProductId })
-           // .IsUnique(true);
+            // builder.Entity<Models.Customer>()
+            //     .HasIndex(c => c.Code)
+            //     .IsUnique(true);
+            // builder.Entity<Process>()
+            //     .HasIndex(p => new { p.Code, p.Direction, p.EdiVersion, p.PartnerId })
+            //     .IsUnique(true);
+            // builder.Entity<Partner>()
+            //     .HasIndex(p => new { p.CompanyId, p.Code })
+            //     .IsUnique(true);
+            // builder.Entity<Company>()
+            // .HasIndex(p => new { p.SubscriptionId, p.Code })
+            // .IsUnique(true);
+            // builder.Entity<Subscription>()
+            // .HasIndex(p => new { p.CustomerId, p.ProductId })
+            // .IsUnique(true);
 
 
             builder.Seed();

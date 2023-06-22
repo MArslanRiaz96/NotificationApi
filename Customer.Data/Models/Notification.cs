@@ -13,12 +13,13 @@ namespace Customer.Data.Models
     {
         [Key]
         public string Id { get; set; }
-        public virtual string Heading { get; set; }
-        public virtual string Message { get; set; }
-        public virtual string Body { get; set; }
-        public virtual string UserEmail { get; set; }
-        public virtual Boolean IsRead { get; set; }
-        public virtual string RedirectUrl { get; set; }
+        public string Heading { get; set; }
+        public string Message { get; set; }
+        public string Body { get; set; }
+        public string UserEmail { get; set; }
+        public Boolean IsRead { get; set; }
+        public string RedirectUrl { get; set; }
+        public string Bodysize { get; set; }
         public string ProductId { get; set; }
         public string TenantId { get; set; }
         public string EnvironmentId { get; set; }

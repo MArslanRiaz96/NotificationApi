@@ -14,6 +14,7 @@ namespace Customer.Model.Notifications
         public string Body { get; set; }
         public string UserEmail { get; set; }
         public string RedirectUrl { get; set; }
+        public string Bodysize { get; set; }
         public bool IsSpecific { get; set; } = false;
         public string ProductId { get; set; } = null!;
         public string GroupId { get; set; }
@@ -21,6 +22,7 @@ namespace Customer.Model.Notifications
         public string EnvironmentId { get; set; }
         public string CompanyId { get; set; }
 
+        public string AppUrl { get; set; }
 
 
     }

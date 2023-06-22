@@ -4,6 +4,7 @@ using Customer.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Customer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230606102834_addSubscriptionTable")]
+    partial class addSubscriptionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,10 +147,6 @@ namespace Customer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Bodysize")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CompanyId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -238,20 +237,20 @@ namespace Customer.Data.Migrations
                         {
                             Id = "11db7c7d-2ddb-49b6-9c40-ff4dc23a7730",
                             CreatedBy = "arslan",
-                            CreatedOn = new DateTime(2023, 6, 1, 12, 27, 40, 419, DateTimeKind.Utc).AddTicks(8773),
+                            CreatedOn = new DateTime(2023, 6, 6, 10, 28, 34, 14, DateTimeKind.Utc).AddTicks(8061),
                             IsActive = true,
                             ModifiedBy = "arslan",
-                            ModifiedOn = new DateTime(2023, 6, 1, 12, 27, 40, 419, DateTimeKind.Utc).AddTicks(8776),
+                            ModifiedOn = new DateTime(2023, 6, 6, 10, 28, 34, 14, DateTimeKind.Utc).AddTicks(8069),
                             Name = "PartnerLinq US"
                         },
                         new
                         {
                             Id = "56730618-A053-4605-BFA0-42DC6CBE0CF7",
                             CreatedBy = "arslan",
-                            CreatedOn = new DateTime(2023, 6, 1, 12, 27, 40, 419, DateTimeKind.Utc).AddTicks(8819),
+                            CreatedOn = new DateTime(2023, 6, 6, 10, 28, 34, 14, DateTimeKind.Utc).AddTicks(8109),
                             IsActive = true,
                             ModifiedBy = "arslan",
-                            ModifiedOn = new DateTime(2023, 6, 1, 12, 27, 40, 419, DateTimeKind.Utc).AddTicks(8819),
+                            ModifiedOn = new DateTime(2023, 6, 6, 10, 28, 34, 14, DateTimeKind.Utc).AddTicks(8109),
                             Name = "Data Fabric"
                         });
                 });
