@@ -93,15 +93,15 @@ using (var scope = app.Services.CreateScope())
 }
 app.MapHub<NotificationHub>("/notification", options =>
 {
-    options.Transports =
-                HttpTransportType.WebSockets;
+    //options.Transports =
+               // HttpTransportType.WebSockets;
             //    HttpTransportType.LongPolling;
    // options.CloseOnAuthenticationExpiration = true;
     //options.ApplicationMaxBufferSize = 65_536;
     //options.TransportMaxBufferSize = 65_536;
     //options.MinimumProtocolVersion = 0;
    // options.TransportSendTimeout = TimeSpan.FromMinutes(25);
-    options.WebSockets.CloseTimeout = TimeSpan.FromMinutes(25);
+    //options.WebSockets.CloseTimeout = TimeSpan.FromMinutes(25);
    // options.LongPolling.PollTimeout = TimeSpan.FromMinutes(25);
     //Console
     //.WriteLine($"Authorization data items: {options.AuthorizationData.Count}");
