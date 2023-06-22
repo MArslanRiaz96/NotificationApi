@@ -35,20 +35,31 @@ builder.Services.AddCors(options =>
                ;
     });
 });
-builder.Services.AddSignalR(hubOptions => {
-    hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(25);
-   // hubOptions.MaximumReceiveMessageSize = 65_536;
-   // hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(15);
-   // hubOptions.MaximumParallelInvocationsPerClient = 2;
-    hubOptions.EnableDetailedErrors = true;
-    //hubOptions.StreamBufferCapacity = 15;
+//builder.Services.AddSignalR(hubOptions => {
+//    hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(25);
+//   // hubOptions.MaximumReceiveMessageSize = 65_536;
+//   // hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(15);
+//   // hubOptions.MaximumParallelInvocationsPerClient = 2;
+//    hubOptions.EnableDetailedErrors = true;
+//    //hubOptions.StreamBufferCapacity = 15;
 
-    if (hubOptions?.SupportedProtocols is not null)
-    {
-        foreach (var protocol in hubOptions.SupportedProtocols)
-            Console.WriteLine($"SignalR supports {protocol} protocol.");
-    }
-});
+//    if (hubOptions?.SupportedProtocols is not null)
+//    {
+//        foreach (var protocol in hubOptions.SupportedProtocols)
+//            Console.WriteLine($"SignalR supports {protocol} protocol.");
+//    }
+//});
+
+            builder.Services.AddSignalR(hubOptions =>
+            {
+                hubOptions.EnableDetailedErrors = true;
+                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(10);
+                hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(20);
+            })
+                .AddJsonProtocol(options =>
+                {
+                    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+                });
 
 builder.Logging.AddFilter("Microsoft.AspNetCore.SignalR", LogLevel.Debug);
 builder.Logging.AddFilter("Microsoft.AspNetCore.Http.Connections", LogLevel.Debug);
