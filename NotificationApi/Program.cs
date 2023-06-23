@@ -53,8 +53,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddSignalR(hubOptions =>
 {
     hubOptions.EnableDetailedErrors = true;
-    hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(10);
-    hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(20);
+    hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(5);
+    hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(10);
 });
                 //.AddJsonProtocol(options =>
                 //{
