@@ -15,6 +15,9 @@ namespace Customer.Data.Models
         public string ConnectionId { get; set; } = null!;
         public string Username { get; set; } = null!;
         public string ProductId { get; set; }
+        public string TenantId { get; set; }
+        public string EnvironmentId { get; set; }
+        public string CompanyId { get; set; }
         public virtual Product Products { get; set; }
         public DateTime CreatedOn { get; set; }
     }

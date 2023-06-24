@@ -1,7 +1,10 @@
 using Customer.Data;
+using Customer.Data.Context;
 using Customer.Manager;
 using Customer.Model;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -19,12 +22,56 @@ IWebHostEnvironment environment = builder.Environment;
 builder.Services.AddDataInfrastructure(builder.Configuration);
 builder.Services.AddModelLayer(builder.Configuration);
 builder.Services.AddBusinessLayer(builder.Configuration);
-builder.Services.AddSignalR();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy" ,builder =>
+    {
+                 builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .SetIsOriginAllowed((host) => true)
+                .WithOrigins(configuration.GetSection("WhiteListOrigins").GetChildren().Select(x => x.Value).ToArray())
+               ;
+    });
+});
+//builder.Services.AddSignalR(hubOptions => {
+//    hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(25);
+//   // hubOptions.MaximumReceiveMessageSize = 65_536;
+//   // hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(15);
+//   // hubOptions.MaximumParallelInvocationsPerClient = 2;
+//    hubOptions.EnableDetailedErrors = true;
+//    //hubOptions.StreamBufferCapacity = 15;
+
+//    if (hubOptions?.SupportedProtocols is not null)
+//    {
+//        foreach (var protocol in hubOptions.SupportedProtocols)
+//            Console.WriteLine($"SignalR supports {protocol} protocol.");
+//    }
+//});
+
+builder.Services.AddSignalR(hubOptions =>
+{
+    hubOptions.EnableDetailedErrors = true;
+    hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(5);
+    hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(10);
+});
+                //.AddJsonProtocol(options =>
+                //{
+                //    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+                //});
+
+builder.Logging.AddFilter("Microsoft.AspNetCore.SignalR", LogLevel.Debug);
+builder.Logging.AddFilter("Microsoft.AspNetCore.Http.Connections", LogLevel.Debug);
 builder.Services.AddScoped<NotificationHub>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 //builder.Services.AddMvc(options =>
 //{
 //    options.Filters.Add(typeof(ValidateModelStateAttribute));
@@ -48,14 +95,32 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction() || app.Env
 app.UseCustomExceptionHandler();
 
 app.UseHttpsRedirection();
-app.UseCors(builder2 => builder2
-                               .WithOrigins(builder.Configuration.GetSection("WhiteListOrigins").GetChildren().Select(x => x.Value).ToArray())
-                               .AllowAnyHeader()
-                               .AllowAnyMethod()
-                               .AllowCredentials()
-                       );
+app.UseRouting();
+
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
-app.MapHub<NotificationHub>("/notification");
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    dbContext.Database.SetCommandTimeout(3600);
+    dbContext.Database.Migrate();
+}
+app.MapHub<NotificationHub>("/notification", options =>
+{
+    //options.Transports =
+               // HttpTransportType.WebSockets;
+            //    HttpTransportType.LongPolling;
+   // options.CloseOnAuthenticationExpiration = true;
+    //options.ApplicationMaxBufferSize = 65_536;
+    //options.TransportMaxBufferSize = 65_536;
+    //options.MinimumProtocolVersion = 0;
+   // options.TransportSendTimeout = TimeSpan.FromMinutes(25);
+    //options.WebSockets.CloseTimeout = TimeSpan.FromMinutes(25);
+   // options.LongPolling.PollTimeout = TimeSpan.FromMinutes(25);
+    //Console
+    //.WriteLine($"Authorization data items: {options.AuthorizationData.Count}");
+});
 app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 
