@@ -39,7 +39,7 @@ namespace NotificationApi.HubService
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw;
+                Console.WriteLine(ex.ToString());
             }
         }
         public async Task<PagedResult<PushNotificationModel>> GetReadNotifications(string userEmail, string productId, int page, int pageSize = 10)
