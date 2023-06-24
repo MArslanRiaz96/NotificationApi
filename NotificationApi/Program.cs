@@ -3,6 +3,7 @@ using Customer.Manager;
 using Customer.Model;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NotificationApi.Extentions;
@@ -18,7 +19,11 @@ IWebHostEnvironment environment = builder.Environment;
 builder.Services.AddDataInfrastructure(builder.Configuration);
 builder.Services.AddModelLayer(builder.Configuration);
 builder.Services.AddBusinessLayer(builder.Configuration);
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(HubOptions =>
+{
+    HubOptions.EnableDetailedErrors = true;
+}
+    );
 builder.Services.AddScoped<NotificationHub>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
