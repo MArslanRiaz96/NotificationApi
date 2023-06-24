@@ -17,9 +17,8 @@ namespace NotificationApi.HubService
             _dbContext = dbContext;
             _notificationManager = notificationManager;
         }
-        public async Task<string> SaveUserConnection(string userName, string productId)
+        public async Task SaveUserConnection(string userName, string productId)
         {
-            return "Test :"+ userName + productId;
             var transaction = _dbContext.Database.BeginTransaction();
             try
             {
