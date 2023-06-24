@@ -19,11 +19,7 @@ IWebHostEnvironment environment = builder.Environment;
 builder.Services.AddDataInfrastructure(builder.Configuration);
 builder.Services.AddModelLayer(builder.Configuration);
 builder.Services.AddBusinessLayer(builder.Configuration);
-builder.Services.AddSignalR(HubOptions =>
-{
-    HubOptions.EnableDetailedErrors = true;
-}
-    );
+builder.Services.AddSignalR();
 builder.Services.AddScoped<NotificationHub>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
