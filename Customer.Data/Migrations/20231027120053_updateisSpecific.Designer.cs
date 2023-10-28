@@ -4,6 +4,7 @@ using Customer.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Customer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231027120053_updateisSpecific")]
+    partial class updateisSpecific
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,13 +208,6 @@ namespace Customer.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("EnvironmentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsSpecific")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -260,20 +256,20 @@ namespace Customer.Data.Migrations
                         {
                             Id = "11db7c7d-2ddb-49b6-9c40-ff4dc23a7730",
                             CreatedBy = "arslan",
-                            CreatedOn = new DateTime(2023, 10, 27, 12, 13, 20, 875, DateTimeKind.Utc).AddTicks(4902),
+                            CreatedOn = new DateTime(2023, 10, 27, 12, 0, 52, 592, DateTimeKind.Utc).AddTicks(2607),
                             IsActive = true,
                             ModifiedBy = "arslan",
-                            ModifiedOn = new DateTime(2023, 10, 27, 12, 13, 20, 875, DateTimeKind.Utc).AddTicks(4903),
+                            ModifiedOn = new DateTime(2023, 10, 27, 12, 0, 52, 592, DateTimeKind.Utc).AddTicks(2608),
                             Name = "PartnerLinq US"
                         },
                         new
                         {
                             Id = "56730618-A053-4605-BFA0-42DC6CBE0CF7",
                             CreatedBy = "arslan",
-                            CreatedOn = new DateTime(2023, 10, 27, 12, 13, 20, 875, DateTimeKind.Utc).AddTicks(4959),
+                            CreatedOn = new DateTime(2023, 10, 27, 12, 0, 52, 592, DateTimeKind.Utc).AddTicks(2666),
                             IsActive = true,
                             ModifiedBy = "arslan",
-                            ModifiedOn = new DateTime(2023, 10, 27, 12, 13, 20, 875, DateTimeKind.Utc).AddTicks(4960),
+                            ModifiedOn = new DateTime(2023, 10, 27, 12, 0, 52, 592, DateTimeKind.Utc).AddTicks(2667),
                             Name = "Data Fabric"
                         });
                 });

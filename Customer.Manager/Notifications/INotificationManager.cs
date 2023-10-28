@@ -13,7 +13,9 @@ namespace Customer.Manager.Notifications
     public interface INotificationManager
     {
         public Task<string> InsertNotification(NotificationsModel notification);
+        public Task<string> InsertNotificationChat(NotificationChatModel notification);
         public Task<List<HubConnection>> GetUserConnections(string UserName, string productId, string tenantId = "", string environmentId = "", string companyId = "");
+        public Task<List<HubConnection>> GetUserConnectionForChat(string UserName);
         Task<PagedResult<PushNotificationModel>> GetUnreadNotifications(string userEmail, string productId, string notificationId = "", int page = 1, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "");
         Task<PagedResult<PushNotificationModel>> GetUnreadGroupNotifications(string userEmail, string productId, string groupId = "", string notificationId = "", int page = 1, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "");
         Task<PagedResult<PushNotificationModel>> GetReadNotifications(string UserEmail, string productId, string notificationId = "", int page = 1, int pageSize = 10, string tenantId = "", string environmentId = "", string companyId = "");

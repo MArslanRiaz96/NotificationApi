@@ -243,5 +243,31 @@ namespace NotificationApi.HubService
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
+        public async Task GetNotificationForChat(string msg,string id,bool isSpecific,string EnvironmentId)
+        {
+            var NotificationChatModel = new NotificationChatModel()
+            {
+                ReceiverUserId = id,
+                Message = msg,
+                IsSpecific = isSpecific,
+                EnvironmentId = EnvironmentId
+            };
+            if (isSpecific == false && string.IsNullOrEmpty(EnvironmentId))
+            {
+                string notificationChatId = await _notificationManager.InsertNotificationChat(NotificationChatModel);
+                var notificationPush = new List<PushNotificationChatModel>() { new PushNotificationChatModel { Message = msg } };
+                await Clients.Group(EnvironmentId).GetNotificaitonForChat(notificationPush);
+            }
+            else
+            {
+                var hubConnections = await _notificationManager.GetUserConnectionForChat(id);
+                if (hubConnections?.Count() >= 1)
+                {
+                    string notificationChatId = await _notificationManager.InsertNotificationChat(NotificationChatModel);
+                    var notificationPush = new List<PushNotificationChatModel>() { new PushNotificationChatModel { Message = msg } };
+                    await Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).GetNotificaitonForChat(notificationPush);
+                }
+            }           
+        }
     }
 }

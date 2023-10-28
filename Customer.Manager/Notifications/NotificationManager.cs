@@ -266,6 +266,10 @@ namespace Customer.Manager.Notifications
         {
             return await _context.HubConnections.Where(con => con.Username == UserName && con.ProductId == productId && (string.IsNullOrEmpty(tenantId) || con.TenantId == tenantId) && (string.IsNullOrEmpty(companyId) || con.CompanyId == companyId)).ToListAsync();
         }
+        public async Task<List<HubConnection>> GetUserConnectionForChat(string UserName)
+        {
+            return await _context.HubConnections.Where(con => con.Username == UserName).ToListAsync();
+        }
 
         public async Task<string> InsertNotification(NotificationsModel notification)
         {
@@ -444,5 +448,25 @@ namespace Customer.Manager.Notifications
             return enviromentComp;
         }
 
+        public async Task<string> InsertNotificationChat(NotificationChatModel notification)
+        {
+            var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var notificationChat = _mapper.Map<NotificationChat>(notification);
+
+                notificationChat.Id = Guid.NewGuid().ToString();
+                _context.NotificationChats.Add(notificationChat);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return notificationChat.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+            throw new NotImplementedException();
+        }
     }
 }

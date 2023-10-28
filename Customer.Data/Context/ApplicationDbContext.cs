@@ -31,6 +31,7 @@ namespace Customer.Data.Context
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<TenantEnvironment> Environments { get; set; }
+        public DbSet<NotificationChat> NotificationChats { get; set; }
         public override int SaveChanges()
         {
             UpdateAuditableProperties();

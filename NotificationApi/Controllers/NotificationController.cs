@@ -37,7 +37,7 @@ namespace NotificationApi.Controllers
                     {
                         string notificationId = await _notificationManager.InsertNotification(model);
 
-                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, Bodysize = model.Bodysize, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId , GroupId = model.GroupId, IsSpecific = model.IsSpecific, TenantId = model.TenantId, EnvironmentId = model.EnvironmentId, CompanyId = model.CompanyId} };
+                        var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, Bodysize = model.Bodysize, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId, IsSpecific = model.IsSpecific, TenantId = model.TenantId, EnvironmentId = model.EnvironmentId, CompanyId = model.CompanyId } };
                         await _hubContext.Clients.Group(model.EnvironmentId).GetNotificaiton(notificationPush);
 
                         retMessage = "Success";
@@ -48,7 +48,7 @@ namespace NotificationApi.Controllers
                         if (hubConnections?.Count() >= 1)
                         {
                             string notificationId = await _notificationManager.InsertNotification(model);
-                            var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, Bodysize = model.Bodysize, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId, IsSpecific = model.IsSpecific, TenantId = model.TenantId,EnvironmentId = model.EnvironmentId, CompanyId = model.CompanyId } };
+                            var notificationPush = new List<PushNotificationModel>() { new PushNotificationModel { Heading = model.Heading, Message = model.Message, Body = model.Body, UserEmail = model.UserEmail, RedirectUrl = model.RedirectUrl, Bodysize = model.Bodysize, CreatedOn = DateTime.UtcNow.ToString("MM/dd/yyyy h:mm tt"), Id = notificationId, IsRead = false, ProductId = model.ProductId, GroupId = model.GroupId, IsSpecific = model.IsSpecific, TenantId = model.TenantId, EnvironmentId = model.EnvironmentId, CompanyId = model.CompanyId } };
                             await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).GetNotificaiton(notificationPush);
                         }
                         retMessage = "Success";
@@ -163,7 +163,7 @@ namespace NotificationApi.Controllers
                                     }
 
                                 };
-                                await _hubContext.Clients.Group(subEnv.Environment.Id + company.CompanyId).GetNotificaiton(notificationPush);
+                                    await _hubContext.Clients.Group(subEnv.Environment.Id + company.CompanyId).GetNotificaiton(notificationPush);
                                 }
                             }
                         }
@@ -180,6 +180,33 @@ namespace NotificationApi.Controllers
             {
                 return e.ToString();
             }
+        }
+
+        [HttpPost("ChatNotification")]
+        public async Task<string> ChatNotification([FromBody] NotificationChatModel model)
+        {
+            string retMessage = string.Empty;
+            if (!model.IsSpecific)
+            {
+                string notificationChatId = await _notificationManager.InsertNotificationChat(model);
+                var notificationPush = new List<PushNotificationChatModel>() { new PushNotificationChatModel { Message=model.Message } };
+                await _hubContext.Clients.Group(model.EnvironmentId).GetNotificaitonForChat(notificationPush);
+                retMessage = "Success";
+            }
+            else
+            {
+                var hubConnections = await _notificationManager.GetUserConnectionForChat(model.ReceiverUserId);
+                if (hubConnections?.Count() >= 1)
+                {
+                    string notificationChatId = await _notificationManager.InsertNotificationChat(model);
+                    //var notificationPush = new List<PushNotificationChatModel>() { new PushNotificationChatModel { Message = model.Message } };
+                    var notificationPush = new List<PushNotificationChatModel>() { new PushNotificationChatModel { Message = model.Message } };
+                    await _hubContext.Clients.Clients(hubConnections.Select(x => x.ConnectionId).ToList()).GetNotificaitonForChat(notificationPush);
+                    retMessage = "Success";
+                }
+            }                    
+
+            return retMessage;
         }
     }
 }
